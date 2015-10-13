@@ -1,0 +1,204 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.BookSearch
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+
+    ViewBag.Title = "BookSearch";
+
+    //Layout = "~/Views/Shared/_MyPartial.cshtml";
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(function () {
+                $('#dvPagera').on('click', 'a', function () {
+                    $.ajax({
+                        url: this.href,
+                        type: 'GET',
+                        cache: false,
+                        success: function (result) {
+
+                            $('#dvLoans').html(result);
+                        }
+                    });
+                    return false;
+                });
+            });
+
+
+            function BookSearch(studentId, search, page) {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Students/BookSearch")",
+                    data: {
+                        studentId: parseInt(studentId),
+                        search: search,
+                        page: page
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#dvLoans').empty().append(result);
+                        $('#scanArea').hide();
+                        // $("#modal-content").empty().append(result);
+                    }
+                });
+            }
+
+            $(function () {
+                $('.selectTitle').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).attr('data-Id');
+                    var studentId = $('#selectedId').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/BookSelection")",
+                        data: {
+                            studentId: studentId,
+                            productId: id
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            $('#scanArea').show();
+                            LoadCurrentLoans(studentId, result.Result)
+                        }
+                    });
+                    //    error: function (result) {
+                    //    $('#scanArea').Show();
+                    //    LoadCurrentLoans(studentId, "There was an error process this book. Please try again.")
+                    //    }
+                    //});
+                });
+            });
+
+            function LoadCurrentLoans(studentId, message) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Loans/ShowCurrentLoansView")",
+                    data: {
+                        studentId: parseInt(studentId)
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#dvMessages').html(message);
+                        $("#dvLoans").empty().append(result);
+                    }
+                });
+            }
+
+            $(function () {
+                $('#btnCloseTitles').on('click', function () {
+                   
+                    var id = $('#selectedId').val();
+                     $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Loans/HomeReading")",
+                        data: {
+                        studentId: parseInt(id),
+                        },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#dvActivity").empty().append(result);
+                    }
+                });
+            });
+        });
+
+        });
+    </script>
+}
+
+@using (Html.BeginForm( ))
+{
+
+    <h4>Please select a title...</h4>
+
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>
+                Title
+            </th>
+
+            <th>
+                Author
+            </th>
+            <th>
+                Read Level
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Titles)
+        {
+            <tr>
+                <td>
+                    @{
+            if (item.Image_Id > 0)
+            {
+                string imageBase64 = Convert.ToBase64String(item.Jacket);
+                string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                <img src="@imageSrc" width="50" height="70" />
+            }
+            else
+            {
+                <img src="~/Images/NoJacket1.jpg" width="50" height="70" />
+            }
+                    }
+                </td>
+                <td>
+                    @item.Title
+                </td>
+                <td>
+                    @item.MainAuthor
+                </td>
+                <td>
+                    @item.ReadLevel
+                </td>
+                <td>
+                    @*@Html.ActionLink("Select", "", new { @class = "selectTitle", @id = item.Product_Id })*@
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-hand-left'></span>", "Select title", "", "Students", routeValues: null,
+                                    htmlAttributes: new { @class = "btn btn-primary selectTitle", @data_Id = @item.Product_Id })
+                </td>
+            </tr>
+        }
+    </table>
+   
+    <div id="dvPagera">
+
+        @Html.PagedListPager((IPagedList)Model.Titles,
+                                  page => Url.Action("BookSearch", new
+                                 {
+                                     studentId = Model.StudentId,
+                                     search = Model.Search,
+                                     page
+                                 }),
+                                 PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly,
+                                                    new AjaxOptions
+                                                    {
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        HttpMethod = "Get",
+                                                        UpdateTargetId = "dvLoans"
+                                                    }))
+       
+    </div>
+    @*<div class="pull-right">*@
+            <button type="button" class="btn btn-warning" id="btnCloseTitles">
+                Cancel
+            </button>
+    
+
+}
+
+
+
+
+
+
+
+
+
+
+

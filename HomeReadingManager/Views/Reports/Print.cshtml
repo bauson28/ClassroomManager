@@ -1,0 +1,86 @@
+﻿@model List<HomeReadingManager.ViewModels.MyModel>
+@{
+    var rowCounter = 0;
+}
+<style>
+    .table {
+        width: 100%;
+        border: 1px solid gray;
+    }
+
+        .table td {
+            padding: 2px;
+        }
+
+
+    .table-row-1 td, .table-row-1 th {
+        background: lightgray;
+        border: 0 solid lightgray;
+    }
+
+    .table-row-2 td, .table-row-2 th, thead {
+        background: white;
+        border: 0 solid white;
+    }
+
+    .tableHeaderRow {
+        font-weight: bold;
+        border: 1px solid lightgray;
+    }
+
+    .column1 {
+        width: 15%;
+    }
+
+    .column2 {
+        width: 15%;
+    }
+</style>
+
+<style>
+    /* suppress link for printing */
+    @@media only print {
+        a {
+            display: none;
+        }
+    }
+</style>
+<a href="#" onclick="window.print(); return false;">Print</a>
+<table class="table">
+    <thead>
+        <tr>
+            <td class="tableHeaderRow column1">
+                First Name
+            </td>
+            <td class="tableHeaderRow column2">
+                Last Name
+            </td>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            foreach (var item in Model)
+            {
+                var className = "table-row-1";
+                if (rowCounter % 2 == 0)
+                {
+                    className = "table-row-2";
+                }
+                <tr class="@className">
+                    <td>
+                        @item.FirstName
+                    </td>
+                    <td>
+                        @item.LastName
+                    </td>
+
+
+                </tr>
+                rowCounter++;
+            }
+        }
+    </tbody>
+</table>
+<a href="#" onclick="window.print(); return false;">Print</a>

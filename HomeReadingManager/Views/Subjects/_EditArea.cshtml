@@ -1,0 +1,60 @@
+﻿@model HomeReadingManager.ViewModels.AssessmentArea
+
+@{
+    ViewBag.Title = "EditArea";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+        <div class="alert alert-warning">
+
+            <h4>Edit KLA indicator</h4>
+
+            <div class="modal-body">
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.GradeReportId)
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 focus">
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "formcontrol", @maxlength = "240" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-2">
+                        <input type="submit" value="Save" class="btn btn-primary closeModel btnMedium" id="approve-btn" />
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-warning closeModel btnMedium" data-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+
+
+
+

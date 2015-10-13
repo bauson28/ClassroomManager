@@ -1,0 +1,72 @@
+﻿@model HomeReadingManager.ViewModels.NextSemester
+
+@{
+    ViewBag.Title = "NextSemester";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+
+<script type="text/javascript">
+    @*$(function () {
+        var selection = set(@Html.Raw(Json.Encode(Model.Selection)));
+        SetSelection(selection);
+    })
+    function SetSelection(selection) {
+        $('input[name=Selection]').val([selection]);
+    }*@
+
+
+</script>
+
+<div class="modal-body">
+    <div class="alert alert-warning">
+        @using (Html.BeginForm("OpenNewSemester", "Subjects", FormMethod.Post, new { id = "thisForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.LibraryId)
+            @*@Html.HiddenFor(model => model.Selection)*@
+            @Html.HiddenFor(model => model.Id1)
+            @Html.HiddenFor(model => model.Id2)
+            <div class="form-horizontal">
+                <h4>Are you sure you want to start next semester's reports?</h4>
+                <hr />
+
+                <div class="form-group">
+                    <p>
+                        @Html.LabelFor(model => model.Selection, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </p>
+                    <div class="col-md-10">
+                        @if (Model.Options > 1)
+                        {
+                            <p>
+                                @Html.RadioButton("Selection", 1, Model.Selection == 1)
+                                @Html.DisplayFor(m => Model.Semester1)
+                            </p>
+                        }
+                        @if (Model.Options == 3)
+                        {
+                            <p>
+                                @Html.RadioButton("Selection", 2, Model.Selection == 2)
+                                @Html.DisplayFor(m => Model.Semester2)
+                            </p>
+                        }
+                        <p>
+                            @Html.RadioButton("Selection", 3, Model.Selection == 3)
+                            Load default settings
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-1">
+                        <input type="submit" value="Start next semester" class="btn btn-primary closeModel" />
+                    </div>
+                    <div class="col-md-offset-1 col-md-8">
+                        <button type="button" class="btn btn-warning closeModel" data-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

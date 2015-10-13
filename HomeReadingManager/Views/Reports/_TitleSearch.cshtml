@@ -1,0 +1,86 @@
+﻿@using HomeReadingManager.MyClasses
+@model IEnumerable<HomeReadingManager.Models.Product>
+@using PagedList.Mvc;
+@using PagedList;
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Select Title</h4>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ProdAuthors)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Levels_Id)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in ViewBag.ProductList)
+            {
+                <tr>
+                    <td>
+                        @{
+                if (item.Image_Id > 0)
+                {
+                    string imageBase64 = Convert.ToBase64String(item.Jacket);
+                    string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                    <img src="@imageSrc" width="50" height="70" />
+                }
+                else
+                {
+                    <img src="~/Images/NoJacket1.jpg" width="50" height="70" />
+                }
+                        }
+                    </td>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.MainAuthor
+                    </td>
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @Html.ActionLink("Select", "Index", new { id = ViewBag.Student_Id, productId = item.Product_Id, returnsView = false, onclick = "javascript:SelectTitle();" })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)ViewBag.ProductList, page => Url.Action("Index", new { id = ViewBag.Student_Id, returnsView = false, searchPage = page, newLoan = ViewBag.SearchString }))
+        @*@Html.PagedListPager((IPagedList)ViewBag.ProductList, page => Url.Action("TitleSearch", new { page = page, search = ViewBag.SearchString, studentId = ViewBag.Student_Id }))*@
+    </div>
+    <div class="modal-footer">
+        @*<button class="btn" type="button" data-dismiss="modal">Cancel</button>
+            <input class="btn btn-primary" type="submit" value="Save" />*@
+        @Html.ActionLink("Clear search", "Index", new { id = ViewBag.Student_Id, returnsView = false }, new { @class = "btn btn-default" });
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

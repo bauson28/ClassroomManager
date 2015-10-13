@@ -1,0 +1,73 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.BorrowModel
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+@*<head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Select Title</title>
+    </head>*@
+<body>
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("Title", "Index", new { reportType = Model.ReportType, newOrder = "Title", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page,
+                                                                 activityDate = Model.ActivityDate,
+                                                                 libraryId = Model.LibraryId,
+                                                                 school = Model.School })
+                </th>
+                <th>
+                    @Html.ActionLink("First Name", "Index", new { reportType = Model.ReportType, newOrder = "FirstName", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page,
+                                                                  activityDate = Model.ActivityDate,
+                                                                  libraryId = Model.LibraryId,
+                                                                  school = Model.School })
+                </th>
+                <th>
+                    @Html.ActionLink("Last Name", "Index", new { reportType = Model.ReportType, newOrder = "LastName", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page,
+                                                                 activityDate = Model.ActivityDate,
+                                                                 libraryId = Model.LibraryId,
+                                                                 school = Model.School })
+                </th>
+                <th>
+                    @Html.ActionLink("Class", "Index", new { reportType = Model.ReportType, newOrder = "ClassName", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page,
+                                                                activityDate = Model.ActivityDate, 
+                                                                libraryId = Model.LibraryId, 
+                                                                school = Model.School})
+                </th>
+            </tr>
+
+            @foreach (var item in Model.BorrowList)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.FirstName
+                    </td>
+                    <td>
+                        @item.LastName
+                    </td>
+                    <td>
+                        @item.ClassName
+                    </td>
+                </tr>
+            }
+            </table>
+        @Html.PagedListPager((IPagedList)Model.BorrowList, page => Url.Action("Index", new { reportType = Model.ReportType, sortOrder = Model.SortOrder, page = page,
+                                                                                             activityDate = Model.ActivityDate,
+                                                                                             libraryId = Model.LibraryId,
+                                                                                             school = Model.School}))
+    </div>
+
+</body>
+</html>

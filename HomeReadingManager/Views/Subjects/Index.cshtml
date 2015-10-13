@@ -1,0 +1,466 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.SchoolReports
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><span>School Report Form: &nbsp;</span> @Html.DisplayFor(model => model.GradeName)</h2>
+@using (Html.BeginForm("Index", "Subjects", FormMethod.Post, new { id = "thisForm" }))
+{
+    @Html.HiddenFor(model => model.SchoolReportId, new { @id = "schoolReportId" })
+    @Html.HiddenFor(m => Model.LibraryId)
+    @Html.HiddenFor(model => model.GradeReportId, new { @id = "gradeReportId" })
+    @Html.HiddenFor(m => m.AnchorId)
+    <div class="container">
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn1">Pre-school</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn2">Kindergarten</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn3">Grade 1</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn4">Grade 2</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn5">Grade 3</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn6">Grade 4</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn7">Grade 5</button>
+        <button type="button" class="btn btn-info btn-sm  setGrade" id="gradeBtn8">Grade 6</button>
+        <div class="pull-right">
+            @Html.ActionLink("Back to School Reports", "", routeValues: null, htmlAttributes: new { @Id = "goBack" })
+        </div>
+    </div>
+    <hr />
+    <div>
+        @Html.ActionLink("Create new KLA", "CreateKla", routeValues: new { @gradeId = Model.GradeId, @grade = Model.Grade, @gradeReportId = Model.GradeReportId, @libraryId = Model.LibraryId }, htmlAttributes: new { @class = "modal-link btn btn-warning" })
+        <div class="pull-right">
+            <div class="checkbox">
+                @Html.CheckBoxFor(m => m.Ready)
+                @Html.LabelFor(m => m.Ready)
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => Model.GradeId)
+    @Html.HiddenFor(m => Model.Grade)
+
+    int LastId = 0;
+    int klaId = 0;
+
+    //foreach (var item in Model.Klas)
+    for (var klaIndex = 0; klaIndex < Model.Klas.Count(); klaIndex++)
+    {
+        klaId = Model.Klas.ElementAt(klaIndex).Id;
+        var kla = Model.Klas.ElementAt(klaIndex);
+        <hr />
+        <div id="dvContainer">
+            <div class="bg-primary input-lg" id=@Model.Klas.ElementAt(klaIndex).AnchorId>
+                @*@Html.DisplayFor(modelItem => item.Name)*@
+                @Html.DisplayFor(model => kla.Name)
+                <div class="pull-right">
+                    @* <span>
+                        <small>Page break</small>
+                    </span>
+                    @Html.CheckBoxFor(model => model.Klas.ElementAt(klaIndex).PageBreak, new { @class = "pageBreak", @id = @klaId })*@
+                    @if (Model.Klas.ElementAt(klaIndex).PageBreak)
+                    {
+                        <span class='glyphicon glyphicon-file' title="Page break before this KLA"></span>
+
+                    }
+                    @if (Model.Klas.ElementAt(klaIndex).KlaComments)
+                    {
+                        <span class='glyphicon glyphicon-copyright-mark' title="Comments allowed for this KLA"></span>
+
+                    }
+
+                    @*</div>*@
+                    @if (Model.Klas.ElementAt(klaIndex).ReportType < 3)
+                    {
+                        @Html.ActionLink("Add substrand", "CreateSubstrand",
+                                                        routeValues: new
+                                                        {
+                                                            @parentId = klaId,
+                                                            @gradeId = Model.GradeId,
+                                                            @grade = Model.Grade,
+                                                            @parent = kla.Name,
+                                                            @gradeReportId = Model.GradeReportId,
+                                                            @libraryId = Model.LibraryId
+                                                        }, htmlAttributes: new { @class = "modal-link btn btn-info btn-sm", @data_Id = klaId })
+                    }
+
+                    @Html.ActionLink("Add indicator", "CreateArea",
+                                                        routeValues: new
+                                                        {
+                                                            @parentId = kla.Id,
+                                                            @gradeId = Model.GradeId,
+                                                            @grade = Model.Grade,
+                                                            @parent = kla.Name,
+                                                            @gradeReportId = Model.GradeReportId,
+                                                            @libraryId = Model.LibraryId
+                                                        }, htmlAttributes: new { @class = "modal-link btn btn-success btn-sm", @data_Id = klaId })
+
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Move up KLA", "MoveKla", "Subjects", routeValues: new
+                                                                                           {
+                                                                                               id = klaId,
+                                                                                               colOrder = kla.ColOrder,
+                                                                                               down = false,
+                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                               @libraryId = Model.LibraryId
+                                                                                           },
+                                                                                  htmlAttributes: new { @class = "btn btn-success", @data_Id = klaId })
+
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Move down KLA", "MoveKla", "Subjects", routeValues: new
+                                                                                                                           {
+                                                                                                                               id = klaId,
+                                                                                                                               colOrder = kla.ColOrder,
+                                                                                                                               down = true,
+                                                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                                                               @libraryId = Model.LibraryId
+                                                                                                                           },
+                                                           htmlAttributes: new { @class = "btn btn-danger", @data_Id = Model.Klas.ElementAt(klaIndex).Id })
+
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit KLA", "EditKla", "Subjects", routeValues: new
+                                                                                                                   {
+                                                                                                                       id = klaId,
+                                                                                                                       gradeReportId = Model.GradeReportId,
+                                                                                                                       @libraryId = Model.LibraryId
+                                                                                                                   },
+                                                                         htmlAttributes: new { @class = "modal-link btn btn-default" })
+
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete KLA", "Delete", "Subjects", routeValues: new
+                                                                                                                    {
+                                                                                                                        id = klaId,
+                                                                                                                        ReturnId = @LastId,
+                                                                                                                        gradeReportId = Model.GradeReportId,
+                                                                                                                        @libraryId = Model.LibraryId
+                                                                                                                    },
+                                                                         htmlAttributes: new { @class = "modal-link btn btn-danger" })
+                </div>
+            </div>
+
+            @*@foreach (var subItem2 in Model.Substrands.Where(m => m.ParentId == Model.Klas.ElementAt(klaIndex).Id && m.ReportType == 2))*@
+            @for (var ssIndex = 0; ssIndex < Model.Substrands.Where(m => m.ParentId == klaId && m.ReportType == 2).Count(); ssIndex++)
+            {
+                var subItem2 = Model.Substrands.Where(m => m.ParentId == klaId && m.ReportType == 2).ElementAt(ssIndex);
+
+                <div class="bg-info input-lg" id=@subItem2.AnchorId>
+                    <strong>
+                        @* @Html.DisplayFor(s => subItem2.Name)*@
+                        @*@Html.DisplayFor(s => Model.Substrands.Where(m => m.ParentId == kla && m.ReportType == 2).ElementAt(ssIndex).Name)*@
+                        @Html.DisplayFor(s => subItem2.Name)
+                    </strong>
+                    <div class="pull-right">
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Move up substrand", "MovePosition", "Subjects", routeValues: new
+                                                                                           {
+                                                                                               id = subItem2.Id,
+                                                                                               type = 2,
+                                                                                               colOrder = subItem2.ColOrder,
+                                                                                               parentId = subItem2.ParentId,
+                                                                                               down = false,
+                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                               @libraryId = Model.LibraryId
+                                                                                           },
+                                                                                         htmlAttributes: new { @class = "btn btn-success", @data_Id = subItem2.Id })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Move down substrand", "MovePosition", "Subjects", routeValues: new
+                                                                                                                           {
+                                                                                                                               id = subItem2.Id,
+                                                                                                                               type = 2,
+                                                                                                                               colOrder = subItem2.ColOrder,
+                                                                                                                               parentId = subItem2.ParentId,
+                                                                                                                               down = true,
+                                                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                                                               @libraryId = Model.LibraryId
+                                                                                                                           },
+                                                                  htmlAttributes: new { @class = "btn btn-danger", @data_Id = subItem2.Id })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit  substrand", "EditSubstrand", "Subjects", routeValues: new
+                                                                                                                           {
+                                                                                                                               id = subItem2.Id,
+                                                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                                                               @libraryId = Model.LibraryId
+                                                                                                                           },
+                                                                 htmlAttributes: new { @class = "modal-link btn btn-default" })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete substrand", "Delete", "Subjects", routeValues: new
+                                                                                                                           {
+                                                                                                                               id = subItem2.Id,
+                                                                                                                               ReturnId = @LastId,
+                                                                                                                               gradeReportId = Model.GradeReportId,
+                                                                                                                               @libraryId = Model.LibraryId
+                                                                                                                           },
+                                                                  htmlAttributes: new { @class = "modal-link btn btn-danger" })
+                    </div>
+                </div>
+            }
+
+            @*@foreach (var topic in Model.AssessmentAreas.Where(m => m.ParentId == Model.Klas.ElementAt(klaIndex).Id))*@
+            @foreach (var topic in Model.AssessmentAreas.Where(m => m.ParentId == klaId))
+            {
+                <div class="input-lg" id=@topic.AnchorId>
+                    <span><small>@Html.DisplayFor(row => topic.Name)</small></span>
+                    <div class="pull-right">
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Move up assessment area", "MovePosition", "Subjects", routeValues: new
+                                                                                                                   {
+                                                                                                                       id = topic.Id,
+                                                                                                                       type = 3,
+                                                                                                                       colOrder = topic.ColOrder,
+                                                                                                                       parentId = topic.ParentId,
+                                                                                                                       down = false,
+                                                                                                                       gradeReportId = Model.GradeReportId,
+                                                                                                                       @libraryId = Model.LibraryId
+                                                                                                                   },
+                                                                             htmlAttributes: new { @class = "btn btn-success" })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Move down assessment area", "MovePosition", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = topic.Id,
+                                                                                                                           type = 3,
+                                                                                                                           colOrder = topic.ColOrder,
+                                                                                                                           parentId = topic.ParentId,
+                                                                                                                           down = true,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                                             htmlAttributes: new { @class = "btn btn-danger" })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit assessment area", "EditArea", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = topic.Id,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                                             htmlAttributes: new { @class = "modal-link btn btn-default" })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete assessment area", "Delete", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = topic.Id,
+                                                                                                                           ReturnId = @LastId,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                                             htmlAttributes: new { @class = "modal-link btn btn-danger" })
+                    </div>
+                </div>
+                LastId = topic.Id;
+            }
+
+            @*@foreach (var subItem in Model.Substrands.Where(m => m.ParentId == kla && m.ReportType == 1))*@
+            @for (var ssIndex = 0; ssIndex < Model.Substrands.Where(m => m.ParentId == klaId && m.ReportType == 1).Count(); ssIndex++)
+            {
+                var subItem = Model.Substrands.Where(m => m.ParentId == klaId && m.ReportType == 1).ElementAt(ssIndex);
+                int substrandId = subItem.Id;
+                <div class="bg-info input-lg" id=@subItem.AnchorId>
+                    <strong>
+                        @Html.DisplayFor(row => subItem.Name)
+                    </strong>
+                    <div class="pull-right">
+                        @Html.ActionLink("Add indicator", "CreateArea", routeValues:
+                                                                                        new
+                                                                                        {
+                                                                                            @parentId = subItem.Id,
+                                                                                            @gradeId = Model.GradeId,
+                                                                                            @grade = Model.Grade,
+                                                                                            @grandParent = subItem.Parent,
+                                                                                            @parent = subItem.Name,
+                                                                                            @gradeReportId = Model.GradeReportId,
+                                                                                            @libraryId = Model.LibraryId
+                                                                                        }, htmlAttributes: new { @class = "modal-link btn btn-success btn-sm", @data_Id = subItem.Id })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Move up substrand", "MovePosition", "Subjects", routeValues: new
+                                                                                       {
+                                                                                           id = subItem.Id,
+                                                                                           type = 2,
+                                                                                           colOrder = subItem.ColOrder,
+                                                                                           parentId = subItem.ParentId,
+                                                                                           down = false,
+                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                           @libraryId = Model.LibraryId
+                                                                                       },
+                                                                                     htmlAttributes: new { @class = "btn btn-success", @data_Id = subItem.Id })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Move down substrand", "MovePosition", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = subItem.Id,
+                                                                                                                           type = 2,
+                                                                                                                           colOrder = subItem.ColOrder,
+                                                                                                                           parentId = subItem.ParentId,
+                                                                                                                           down = true,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                              htmlAttributes: new { @class = "btn btn-danger", @data_Id = subItem.Id })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit  substrand", "EditSubstrand", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = subItem.Id,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                             htmlAttributes: new { @class = "modal-link btn btn-default" })
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete substrand", "Delete", "Subjects", routeValues: new
+                                                                                                                       {
+                                                                                                                           id = subItem.Id,
+                                                                                                                           ReturnId = @LastId,
+                                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                                           @libraryId = Model.LibraryId
+                                                                                                                       },
+                                                              htmlAttributes: new { @class = "modal-link btn btn-danger" })
+                    </div>
+                </div>
+
+                foreach (var subSubItem in Model.AssessmentAreas.Where(m => m.ParentId == substrandId))
+                {
+                    <div class="input-lg" id=@subSubItem.AnchorId>
+                        <span><small>@Html.DisplayFor(row => subSubItem.Name)</small></span>
+                        <div class="pull-right">
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Move up assessment area", "MovePosition", "Subjects", routeValues: new
+                                                                                                   {
+                                                                                                       id = subSubItem.Id,
+                                                                                                       type = 3,
+                                                                                                       colOrder = subSubItem.ColOrder,
+                                                                                                       parentId = subSubItem.ParentId,
+                                                                                                       down = false,
+                                                                                                       gradeReportId = Model.GradeReportId,
+                                                                                                       @libraryId = Model.LibraryId
+                                                                                                   },
+                                                             htmlAttributes: new { @class = "btn btn-success" })
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Move down assessment area", "MovePosition", "Subjects", routeValues: new
+                                                                                                       {
+                                                                                                           id = subSubItem.Id,
+                                                                                                           type = 3,
+                                                                                                           colOrder = subSubItem.ColOrder,
+                                                                                                           parentId = subSubItem.ParentId,
+                                                                                                           down = true,
+                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                           @libraryId = Model.LibraryId
+                                                                                                       },
+                                                             htmlAttributes: new { @class = "btn btn-danger" })
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit assessment area", "EditArea", "Subjects", routeValues: new
+                                                                                                       {
+                                                                                                           id = subSubItem.Id,
+                                                                                                           gradeReportId = Model.GradeReportId,
+                                                                                                           @libraryId = Model.LibraryId
+                                                                                                       },
+                                                          htmlAttributes: new { @class = "modal-link btn btn-default" })
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete assessment area", "Delete", "Subjects", routeValues: new
+                                                                                                        {
+                                                                                                            id = subSubItem.Id,
+                                                                                                            ReturnId = @LastId,
+                                                                                                            gradeReportId = Model.GradeReportId,
+                                                                                                            @libraryId = Model.LibraryId
+                                                                                                        },
+                                                          htmlAttributes: new { @class = "modal-link btn btn-danger" })
+                        </div>
+                    </div>
+                    LastId = subSubItem.Id;
+                }
+                LastId = substrandId;
+            }
+        </div>
+            LastId = klaId;
+    }
+ 
+}
+<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content">
+
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $.ajaxSetup({
+
+            cache: false
+        })
+
+        $(document).ready(function () {
+
+            function set(value) {
+                return value;
+            }
+
+            var anchor = $('#AnchorId').val();
+            if (anchor != null && anchor != "") {
+                location.hash = "#" + anchor;
+            }
+
+            grade = set(@Html.Raw(Json.Encode(Model.GradeId)));
+            $('#gradeBtn' + grade).removeClass('btn-info').addClass('btn-primary');
+
+            $(function () {
+                $('.setGrade').on('click', function () {
+                    var grade = $(this).text();
+                    var id = $('#schoolReportId').val();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Subjects/SetGrade")",
+                        data: {
+                            grade: grade,
+                            id: id
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            $('#gradeReportId').val(result.Result);
+                            $("#thisForm").submit();
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('#goBack').on('click', function () {
+                    $('gradeReportId').val('');
+                    $(document).submit();
+                });
+            });
+
+            $('#Ready').click(function () {
+                id = set(@Html.Raw(Json.Encode(Model.GradeReportId)));
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Subjects/SetAsReady")",
+                    data: {
+                        id: parseInt(id),
+                        isReady: ($(this).prop("checked"))
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        //location.reload(true);
+                    }
+                });
+            });
+
+            $('.pageBreak').click(function () {
+                id = $(this).attr('id');
+                // alert("here " + id );
+                isChecked = $(this).is(':checked');
+                //isChecked = $(this).prop("checked")
+                //alert("here " + id + " " + isChecked);
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Subjects/SetPageBreak")",
+                    data: {
+                        id: parseInt(id),
+                        hasPageBreak: isChecked
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        //location.reload(true);
+                    },
+                    error: function (result) {
+                        //$(this).prop("checked") = ! $(this).prop("checked");
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+

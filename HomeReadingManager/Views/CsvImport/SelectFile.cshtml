@@ -1,0 +1,59 @@
+﻿@model HomeReadingManager.ViewModels.Imports
+@{
+    ViewBag.Title = "Select File";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("SelectFile", "CsvImport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="row">
+        <h2>Import csv file</h2>
+        @Html.HiddenFor(model => model.LibraryId)
+        @Html.HiddenFor(model => model.UserId)
+        <div class="col-md-3">
+
+            <img src="@Url.Content("~/Images/ExcelList.jpg")" alt="IMAGES" width="200" height="200" />
+        </div>
+
+        <div class="col-md-9" id="radioDiv">
+            <h4>Select import file type</h4>
+            <p>
+                @Html.RadioButton("ImportType", 0, Model.ImportType == 0) Import Teachers and/or Classes
+            </p>
+            <p>
+                @Html.RadioButton("ImportType", 1, Model.ImportType == 1) Assign Students to Classes
+            </p>
+            <p>
+                @Html.RadioButton("ImportType", 2, Model.ImportType == 2) Import Students
+            </p>
+            <p>
+                @Html.RadioButton("ImportType", 3, Model.ImportType == 3) Import Books
+            </p>
+            <div id="fileSelect">
+                <h4>Select CSV file to import</h4>
+                <p>
+                    File has a header row @Html.EditorFor(model => model.HasHeader)
+                </p>
+                <input type="file" name="file" id="file"> @*accept="image/*;capture=camera"*@
+
+
+                @* @Html.ValidationMessageFor(x => x.Jacket)*@
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-11" style="margin-top: 5px">
+                    <input type="submit" name="Submit" value="Upload File" class="btn btn-success" />
+                </div>
+            </div>
+            <p>@Html.DisplayFor(m => Model.Message)</p>
+        </div>
+    </div>
+
+    @*<div class="form-group">
+        <div class="col-md-offset-1 col-md-11" style="margin-top: 5px">
+            <input type="button" name="Bernie special" value="Press me" class="btn btn-warning" id="btnBernie" />
+        </div>
+    </div>*@
+
+}
+

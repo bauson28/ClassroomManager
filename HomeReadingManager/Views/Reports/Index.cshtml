@@ -1,0 +1,232 @@
+﻿@model HomeReadingManager.ViewModels.ReportData
+
+@{
+    ViewBag.Title = "ReportsView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "Reports", FormMethod.Post, new { id = "thisForm" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            @Html.HiddenFor(model => model.Student_Id, new { id = "Student_Id" })
+            @Html.HiddenFor(model => model.ClassName, new { id = "ClassName" })
+            @Html.HiddenFor(model => model.LibraryId, new { id = "LibraryId"})
+            @Html.HiddenFor(model => model.School, new { id = "School" })
+            @Html.HiddenFor(model => model.SearchString, new { id = "SearchString" })
+            @Html.HiddenFor(model => model.SearchPage, new { id = "SearchPage" })
+            <h2>Select report</h2>
+            <p>
+                @Html.RadioButton("ReportType", 1, true, new { onchange = "this.form.submit();" }) Overdue loans
+                @*@Html.DropDownList("days", null, htmlAttributes: new { @class = "form-control", @id = "ddlDays" })*@
+                @Html.DropDownListFor(model => model.Days, new SelectList(Model.DaysList, "Key", "Value"), "Please select...", new { @class = "form-control", @id = "ddlDays" })
+            </p>
+            @if (Model.ReportType > 0)
+            {
+                <p>
+                    @Html.ActionLink("Edit letters home", "EditLettersHome", new { days = Model.Days, sortOrder = Model.SortOrder, acs = Model.Ascending, page = Model.Page, school = Model.School, libraryId = Model.LibraryId })
+                </p>
+            }
+            <br />
+            <p>
+                @Html.RadioButton("ReportType", 2, false, new { onchange = "this.form.submit();" }) Borrowed on
+                &nbsp;&nbsp;&nbsp;
+                @Html.RadioButton("ReportType", 3, false, new { onchange = "this.form.submit();" }) Returned on
+                @Html.TextBoxFor(m => m.ActivityDate, new { Value = Model.ActivityDate.ToString("dd-MM-yyyy"), @class = "form-control input-sm datepicker", @data_provide = "datepicker", @id = "dpBorrow" })
+            </p>
+            <br />
+            <p>
+                @Html.RadioButton("ReportType", 4, false, new { onchange = "this.form.submit();" }) School summary
+            </p>
+            <br />
+            <p>
+                @Html.RadioButton("ReportType", 5, false, new { onchange = "this.form.submit();" }) Class borrowing
+                Search by class:@Html.DropDownListFor(m => Model.ClassId, new SelectList(Model.Classes, "Id", "ClassName", Model.ClassId), "Select class...", new { @id = "ddlClass" })
+            </p>
+            <br />
+            <p>
+                @Html.RadioButton("ReportType", 6, false, new { onchange = "this.form.submit();" }) Individual student
+            </p>
+            <p>
+                Student: @Html.TextBox("SearchString", "", new { id = "tbSearch", @class="shortTextBox" })
+
+                @*@Html.ActionLink("Search", "StudentSearch", new { searchString = "" }, new { @class = "modal-link btn btn-info", id = "searchLink" })*@
+                @*@Html.ActionLink("Search", "StudentSearch", new { searchString = "" }, new { @class = "btn btn-info", id = "searchLink" })*@
+                @*Student: @Html.TextBox("SearchString", "", new { id = "textSearch" })*@
+                <input type="button" value="Search" id="searchLink" class="btn btn-info" />
+            </p>
+</div>
+        <div id="reportHeader">
+            <h2>
+                @Html.DisplayFor(model => model.ReportName)
+
+            </h2>
+            @if (Model.ReportType == 6 && String.IsNullOrEmpty(Model.SearchString))
+            {
+                <p>
+                    Select year: @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "Key", "Value"), new { @id = "yearList" })
+                </p>
+            }
+
+        </div>
+
+        <div class="col-md-9" id="reportsDiv">
+            @{int reportType = Model.ReportType;}
+            <div id="dvContainer">
+                @switch (reportType)
+                {
+                    default:
+                        if (Model.Days > 0)
+                        {
+                            @Html.ActionLink("Print report", "OverdueLoansReport", new { days = Model.Days, sortOrder = Model.SortOrder, asc = Model.Ascending, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                            <div id="letters">
+                                @Html.ActionLink("Print letters home", "PrintOverdueLetters", new { days = Model.Days, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                            </div>
+                        }
+                        @Html.Action("Overdue", "Reports", new { days = Model.Days, sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId, school = Model.School });
+                         break;
+
+                    case 2:
+                    case 3:
+                        if (Model.ActivityDate != null)
+                        {
+                            @Html.ActionLink("Print report", "ActivityReport", new { borrowing = (Model.ReportType != 3), activityDate = Model.ActivityDate, activityDateString = Model.ActivityDate.ToString("dd/mm/yyy"), sortOrder = Model.SortOrder, asc = Model.Ascending, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                        }
+                        @Html.Action("ActivityByDate", "Reports", new { borrowing = (Model.ReportType != 3), activityDate = Model.ActivityDate, sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId, school = Model.School });
+                                                                                                                                                                                                                                                                                                                                                            break;
+
+                    case 4:
+                    @Html.ActionLink("Print report", "SchoolSummaryReport", new { sortOrder = Model.SortOrder, asc = Model.Ascending, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                    @Html.Action("SchoolLoans", "Reports", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId, school = Model.School });
+                                                                                                                                         break;
+
+                    case 5:
+                        if (Model.ClassId > 0)
+                        {
+                        @Html.ActionLink("Print report", "ClassSummaryReport", new { sortOrder = Model.SortOrder, asc = Model.Ascending, classId = Model.ClassId, name = Model.ClassName, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                        }
+                    @Html.Action("ClassLoans", "Reports", new { classId = Model.ClassId, sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, className = Model.ClassName, libraryId = Model.LibraryId, school = Model.School });
+                               break;
+
+                    case 6:
+                        if (Model.Student_Id > 0)
+                        {
+                        @Html.ActionLink("Print report", "StudentBorrowingReport", new { sortOrder = Model.SortOrder, asc = Model.Ascending, studentId = Model.Student_Id, student = Model.Student, year = Model.SelectedYear, libraryId = Model.LibraryId, school = Model.School }, new { target = "_blank" })
+                        }
+                        if (Model.SearchPage > 0)
+                        {
+                            Html.RenderAction("StudentSearch", "Reports", new { searchString = Model.SearchString, page = Model.SearchPage, libraryId = Model.LibraryId, school = Model.School });
+                        }
+                        else
+                        {
+                            @Html.Action("StudentLoans", "Reports", new { studentId = Model.Student_Id, page = Model.Page, student = Model.Student, year = Model.SelectedYear, libraryId = Model.LibraryId, school = Model.School });
+                        }
+                        break;
+                }
+            </div>
+        </div>
+    </div>
+
+   
+}
+@*<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content">
+
+    </div>
+</div>*@
+@section Scripts
+{
+    @*@Scripts.Render("~/bundles/myCustomBundle")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function set(value) {
+                return value;
+            }
+
+            $(function () {
+                $("#ddlClass").change(function () {
+                    $('input[name=ReportType]').val(['5']);
+                    var temp = $("#ddlClass option:selected").text();
+                    $('input[name=ClassName]').val(temp);
+                    $("#thisForm").submit();
+                });
+            });
+
+            $(function () {
+                $("#ddlDays").change(function () {
+                    $('input[name=ReportType]').val(['1']);
+                    $("#thisForm").submit();
+                });
+            });
+
+            $(function () {
+                $('#yearList').on('change', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var selectYear = $("#yearList").val();
+                    var id = $("#Student_Id").val();
+                    var libraryId = $("#LibraryId").val();
+                    var school = $("#School").val();
+                    //Do ajax call
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Reports/StudentLoans")",
+                        data: {
+                            studentId: id,
+                            year: selectYear, 
+                            school: school,
+                            libraryId: libraryId
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            //Create a Div around the Partial View and fill the result
+                            $('#reportsDiv').html(result);
+                        }
+                    });
+                });
+            });
+
+            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+
+            $('#dpBorrow').datepicker();
+            $('#dpBorrow').datepicker().on('changeDate', function (ev) {
+                type = set(@Html.Raw(Json.Encode(Model.ReportType)));
+                if (type != 3) {
+                    $('input[name=ReportType]').val(['2']);
+                }
+                $("#thisForm").submit();
+            });
+
+            $(function () {
+                 $('#searchLink').on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        var value = $('#tbSearch').val();
+                  
+                    if (value != null)
+                    {
+                        $('#SearchPage').val(1);
+                        $('#SearchString').val(value);
+                        $('input[name=ReportType]').val(['6']);
+                        $("#thisForm").submit();
+                    }
+                   
+                });
+            });
+
+
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+

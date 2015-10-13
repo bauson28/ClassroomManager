@@ -1,0 +1,47 @@
+﻿@model HomeReadingManager.ViewModels.AuthorEditModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Add author</h4>
+</div>
+
+
+@using (Html.BeginForm("Create", "ProdAuthors", FormMethod.Post))
+{
+    <div class="modal-body">
+
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m=>Model.ProductId)
+            <h4>@Html.DisplayFor(m=>Model.Title)</h4>
+            <div class="form-group">
+                @Html.LabelFor(m => Model.Author, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => Model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => Model.Author, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.Role_Id, "Role", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => Model.Role_Id, new SelectList(Model.Roles, "Role_Id", "Role"))
+                    @Html.ValidationMessageFor(m => Model.Role_Id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">Cancel</button>
+        <input class="btn btn-success" type="submit" value="Add author" />
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*@Scripts.Render("~/bundles/modalform")*@
+}
+
+
+
+

@@ -1,0 +1,127 @@
+﻿
+@model HomeReadingManager.ViewModels.StudentLoans
+
+@{
+    ViewBag.Title = "LibraryHomeReading";
+    //Layout = "~/Views/Shared/_MyPartial.cshtml";
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(function () {
+                $('#barcodeScan').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    
+                    var studentId = $('#selectedId').val();
+                    var barcode = $('#barcode').val();
+                    var libraryId = $('#libraryId').val();
+                   
+                    if (barcode != null && barcode != "") {
+                        $.ajax({
+                            type: 'POST',
+                            url: "@Url.Content("~/Students/BarcodeScan")",
+                            data: {
+                                studentId: studentId,
+                                barcode: barcode,
+                                libraryId: libraryId
+                            },
+                            dataType: 'json',
+                            success: function (result) {
+                                $('#barcode').val('');
+                                if (result.Success) {
+                                    var id = (parseInt(result.Result));
+
+                                    if (id > 0) {
+                                        $('#' + id).html("RETURNED");
+                                        $('#' + id).removeClass('days').addClass('returned');
+                                        $('#dvMessages').html('');
+                                        $('#barcode').focus();
+                                    }
+                                    else if (result.Result === 0) {
+                                        LoadCurrentLoans(studentId, "");
+                                        $('#dvMessages').html('');
+                                        $('#barcode').focus();
+                                    }
+                                    else if (result.Result === -1) {
+                                        BookSearch(studentId, barcode, 1);
+                                        $('#dvMessages').html('');
+                                    }
+                                    else {
+                                        $('#dvMessages').html(result.Result);
+                                        $('#barcode').focus();
+                                    }
+                                }
+
+
+                            }
+                        });
+                    }
+                });
+            });
+
+            function BookSearch(studentId, search, page) {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Loans/BookSearch")",
+                    data: {
+                        studentId: parseInt(studentId),
+                        search: search,
+                        page: page
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#dvLoans').empty().append(result);
+                        $('#scanArea').hide();
+                        // $("#modal-content").empty().append(result);
+                    }
+                });
+            }
+
+            function LoadCurrentLoans(studentId, message) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Loans/ShowCurrentLoansView")",
+                    data: {
+                    studentId: parseInt(studentId)
+                    },
+                dataType: 'html',
+                success: function (result) {
+                    $('#dvMessages').html(message);
+                    $("#dvLoans").empty().append(result);
+                }
+            });
+        }
+          
+           
+        });
+    </script>
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="centeredHeader">
+        <h2>@Html.DisplayFor(m => m.Student)</h2>
+        <h3>@Html.DisplayFor(m => m.ClassName)</h3>
+        <h4>@Html.DisplayFor(m => m.ReadLevel) &nbsp;&nbsp;&nbsp;@Html.DisplayFor(m => m.BooksRead)</h4>
+        <h4>@Html.DisplayFor(m => m.OnLoan)<span class="textRed">&nbsp;@Html.DisplayFor(m => m.Overdue)</span></h4>
+    </div>
+    <p id="scanArea">
+        Scan barcode of book to return or borrow: @Html.TextBox("Barcode", "", new { @autofocus = "autofocus", @id = "barcode" })
+
+        <input type="submit" value="Search" id="barcodeScan" class="btn btn-info" />
+        @*@Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Search", "BookSearch", "Students", routeValues: null,
+            htmlAttributes: new { @class = "modal-link btn btn-info", @id = "barcodeScan" })*@
+
+    </p>
+
+    <div id="dvMessages" class="textRed"></div>
+    <div id="dvLoans">
+        @{  Html.RenderPartial("_Loans", Model.Loans); }
+
+    </div>
+
+}
+
+

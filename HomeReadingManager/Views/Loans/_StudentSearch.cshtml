@@ -1,0 +1,136 @@
+﻿@model HomeReadingManager.ViewModels.StudentSearch
+
+@{
+    ViewBag.Title = "StudentSearch";
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            
+            $(function () {
+                $('#studentSearch').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var search = $('#textSearch').val();
+                    if (search != "") {
+                        $.ajax({
+                            type: 'POST',
+                            url: "@Url.Content("~/Loans/StudentLoans")",
+                            data: {
+                                search: search
+                           },
+                            dataType: 'html',
+                            success: function (result) {
+                                $('#ddlClass').val(null);
+                                $("#dvStudentList").empty().append(result);
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(function () {
+                $('#ddlClass').on('change', function () {
+                    var id = $(this).val();
+                    $('#textSearch').val("");
+                    if (id) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "@Url.Content("~/Loans/StudentLoans")",
+                            data: {
+                                classId: parseInt(id)
+                            },
+                        dataType: 'html',
+                        success: function (result) {
+                            $("#dvStudentList").empty().append(result);
+                        }
+                    });
+                    }
+                    else
+                    {
+                        ClearStudentList();
+                    }
+                });
+        });
+            
+            $(function () {
+                $('#clearSearch').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                   // var search = $('#textSearch').val();
+                   // var classId = $('#ddlClass').val();
+                   // if (search != "" || classId > 0) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "@Url.Content("~/Loans/StudentLoans")",
+                            data: {
+                                
+                            },
+                        dataType: 'html',
+                        success: function (result) {
+                            $('#textSearch').val("");
+                            $('#ddlClass').val(null);
+                            $("#dvStudentList").empty().append(result);
+                        }
+                    });
+               // }
+                });
+        });
+
+            function ClearStudentList() {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Loans/StudentLoans")",
+                    data: {
+
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#dvStudentList").empty().append(result);
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m=>m.School)
+    @Html.HiddenFor(m=>m.LibraryId)
+    @Html.HiddenFor(m=>m.Page)
+
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10">
+            <br />
+            <br />
+          
+            <p>
+                <img src="~/Images/StudentBoy.jpg" width="120" height="185" />
+           
+                Search by students name : @Html.TextBox("SearchString", "", new { @autofocus = "autofocus", id = "textSearch" })
+                <input type="submit" value="Search" id="studentSearch" class="btn btn-info" />
+                <span id="clearSearch">
+                    @Html.ActionLink("Clear search", "StudentLoans")
+                </span>
+                 </p>
+                       <p style='padding-left: 150px'>
+          <img src="~/Images/NoJacket1.jpg" width="50" height="70" /> <span class="textItalic">(or scan the barcode of a returned book)</span>
+        </p>
+           
+            <p>
+                <img src="~/Images/StudentsGroup.jpg" width="200" height="200" />
+                Search by class:@Html.DropDownListFor(m => Model.ClassId, new SelectList(Model.Classes, "Id", "ClassName", Model.ClassId), "Select class...", new { @id = "ddlClass" })
+
+
+            </p>
+           
+        </div>
+        
+    </div>
+}
+
+

@@ -1,0 +1,16 @@
+﻿@model HomeReadingManager.ViewModels.MappingColumn
+@{
+    Layout = null;
+}
+
+<th>
+    @Html.DropDownListFor(model => model.ColIndex, ViewBag.MappingList as SelectList, new { @class = "maps", @data_Id = Model.ImportMap_Id })
+</th>
+
+  
+
+
+
+
+
+

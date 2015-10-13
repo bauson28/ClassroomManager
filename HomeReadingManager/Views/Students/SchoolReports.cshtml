@@ -1,0 +1,277 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.MyClass
+
+@{
+    ViewBag.Title = "SchoolReports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /*.controlShort input {
+        width: 50px;
+        margin-right: 1px;
+    }
+
+    .centerAlign {
+        text-align: center;
+    }*/
+    .half {
+        width: 130px;
+        float: left;
+    }
+</style>
+
+
+<h2>Class &nbsp; @Html.DisplayFor(m => m.Name)&nbsp; &nbsp;  Student Reports</h2>
+
+@using (Html.BeginForm("MyClass", "Students", FormMethod.Get, new { id = "thisForm" }))
+{
+    <div class="container">
+        <button type="button" class="btn btn-primary btn-sm  setActivity" id="activityBtn1">Summary</button>
+        <button type="button" class="btn btn-danger btn-sm  setActivity" id="activityBtn2">Home Reading</button>
+        <button type="button" class="btn btn-success btn-sm disabled  setActivity" id="activityBtn3">School Reports</button>
+        <button type="button" class="btn btn-warning btn-sm  setActivity" id="activityBtn4">Organise</button>
+    </div>
+    <div class="row">
+        @Html.HiddenFor(m => m.StudentId, new { id = "selectedId" })
+        <div class="col-md-3">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.ActionLink("Student", "Index", new { sortOrder = "FirstName", lastOrder = ViewBag.SortColumn })
+                    </th>
+                    @*<th>
+                            @Html.ActionLink("Reading level", "Index", new { sortOrder = "Level", lastOrder = ViewBag.SortColumn })
+                        </th>*@
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.StudentReports)
+                {
+                    <tr id=@item.Id>
+                        <td>
+                            @{
+                    if (item.Gender == "F")
+                    {
+                        <img src="~/Images/StudentGirl.jpg" width="47" height="60" />
+                    }
+                    else
+                    {
+                        <img src="~/Images/StudentBoy.jpg" width="47" height="60" />
+                                @*string imageBase64 = Convert.ToBase64String(item.Portrait);
+                                        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                                    <img src="@imageSrc" width="47" height="60" />*@
+                    }
+                            }
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+
+                        <td>
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Select student", "", "Students", routeValues: null,
+                                                           htmlAttributes: new { @class = "btn btn-success selectStudent", @data_Id = item.Id, @id = "selectStudent" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-9" id="reportsDiv">
+           
+                <h2>@Html.DisplayFor(m => m.Student)</h2>
+                @Html.ActionLink("Print report", "PrintSchoolReport", new { studId = Model.StudentId, schoolReportId = Model.SchoolReportId, libraryId = Model.LibraryId }, new { target = "_blank" })
+
+            <div id="dvReports">
+                @Html.Action("StudentReport", "Students", new { studentId = Model.StudentId })
+            </div>
+            <div id="dvComments">
+                @Html.Action("StudentComment", "Students", new { studentId = Model.StudentId, schoolReportId = Model.SchoolReportId })
+            </div>
+            @*<div id="dvNoSelection" hidden="hidden">
+                    <img src="~/Images/StudentGirl.jpg" width="150" height="231" />
+                </div>*@
+        </div>
+    </div>
+
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function set(value) {
+                return value;
+            }
+          
+            id = set(@Html.Raw(Json.Encode(Model.StudentId)));
+            if (id > 0) {
+                $('#' + id).addClass('selectedId');
+            }
+            
+            $(function () {
+                $('.setActivity').on('click', function () {
+
+                    var activity = $(this).text();
+                    var lastOrder = set(@Html.Raw(Json.Encode(ViewBag.SortColumn)));
+                    // alert("set grade  " + grade);
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/SetActivity")",
+                        data: {
+                            activity: activity,
+                            sortOrder: lastOrder
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                $("#thisForm").submit();
+                            }
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('.selectStudent').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).attr('data-Id');
+                    $("#selectedId").val(id);
+                    $(".selectedId").removeClass('selectedId');
+                    $('#' + id).addClass('selectedId');
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/StudentReport")",
+                        data: {
+                            studentId: parseInt(id),
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            location.reload(true);
+                        }
+                    });
+                });
+            });
+
+            @*$(function () {
+                $('.setMark').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var value = $(this).val();
+                    var id = $(this).attr('id');
+                    //alert(' other place value ' + value + ' id ' + id);
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Students/SetMark")",
+                        data: {
+                            resultId: parseInt(value),
+                            markId: parseInt(id)
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                if (result.Result != "0") {
+                                    var kids = $('div#' + value).children('button.btn-success');
+                                    kids.removeClass('btn-success').addClass('btn-warning');
+                                }
+                                if (result.Result != "-1") {
+                                    var kids = $('div#' + value).children('button#' + id);
+                                    kids.removeClass('btn-warning').addClass('btn-success');
+                                }
+                            }
+                        }
+                    });
+                });
+            });*@
+
+            $(function () {
+                $('.setEffort').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var value = $(this).val();
+                    var id = $(this).attr('id');
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Students/SetEffort")",
+                        data: {
+                            resultId: parseInt(value),
+                            markId: parseInt(id)
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                if (result.Result != "0") {
+                                    var kids = $('div#E' + value).children('button.btn-success');
+                                    kids.removeClass('btn-success').addClass('btn-warning');
+                                }
+                                var kids = $('div#E' + value).children('button#' + id);
+                                kids.removeClass('btn-warning').addClass('btn-success');
+
+                            }
+                        }
+                    });
+                });
+            });
+            
+            $(function () {
+                $('.toggleMark').on('click', function () {
+                   var value = $(this).val();
+                     $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/ToggleMark")",
+                        data: {
+                            resultId: parseInt(value)
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                var image = $('#I' + value);
+                                if (result.Result == 1) {
+                                   image.attr('src', '@Url.Content("~/Images/tick.jpg")');
+                                }
+                                else {
+                                   image.attr('src', '@Url.Content("~/Images/cross.jpg")');
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('#saveComments').on('click', function () {
+                    var id = $('#studentReportId').val();
+                    var teacher = $('#txtTeacher').val();
+                    var teacher2 = $('#txtTeacher2').val();
+                    var comments = $('#txtComments').val();
+                    var fullDays = $('#txtFullDays').val();
+                    var partDays = $('#txtPartDays').val();
+                    var absentDate = $('#dpAbsentDate').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/SaveComments")",
+                        data: {
+                            id: parseInt(id),
+                            comments: comments,
+                            fullDays: parseInt(fullDays),
+                            partDays: parseInt(partDays),
+                            absentDate: absentDate,
+                            teacher: teacher,
+                            teacher2: teacher2
+                        },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.Success) {
+                           //baf need to show message 
+                        }
+                    }
+                });
+            });
+        });
+
+        });
+    </script>
+}
+
+
+
+

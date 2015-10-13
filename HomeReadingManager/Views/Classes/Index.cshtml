@@ -1,0 +1,95 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.ClassesVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Classes</h2>
+
+<p>
+    @Html.ActionLink("Create new class", "Create")
+    &nbsp; &nbsp; &nbsp;&nbsp;
+
+    @if (Model.ShowInactive)
+    {
+        @Html.ActionLink("Show active only", "Index", new { showInactive = false })
+    }
+    else
+    {
+        @*@Html.ActionLink("Edit all", "Index", new { showInactive = false, editMode = true })
+            <text>&nbsp; &nbsp; &nbsp; &nbsp;</text>*@
+        @Html.ActionLink("Show inactive records", "Index", new { showInactive = true })
+    }
+</p>
+<p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+@using (Html.BeginForm())
+{
+    if (Model.ShowInactive)
+    {
+        <text>Inactive records</text>
+    }
+    
+    @Html.HiddenFor(m => m.EditMode, new { @id = "editAllText" })
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().ClassName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Stage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Teacher)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ClassDetails.Where(x => x.Inactive == Model.ShowInactive))
+        {
+            <tr>
+                <td>
+                    @item.ClassName
+                </td>
+                <td>
+                    @item.Stage
+                </td>
+                <td>
+                    @item.Teacher
+                </td>
+                <td>
+                    @item.Teacher2
+                </td>
+                <td>
+
+                    <div class="pull-right">
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "Classes", routeValues: new
+                                                                               {
+                                                                                   id = item.ClassId,
+                                                                                   lastOrder = ViewBag.SortColumn,
+                                                                                   page = ViewBag.Page
+                                                                               },
+                                                                                htmlAttributes: new { data_modal = "", @class = "btn btn-primary" })
+                        @if (Model.IsAdministrator)
+                        {
+                            <text>&nbsp;</text>
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "Classes", routeValues: new
+                                                                               {
+                                                                                   id = item.ClassId,
+                                                                                   lastOrder = ViewBag.SortColumn,
+                                                                                   page = ViewBag.Page
+                                                                               },
+                                                                                           htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+}

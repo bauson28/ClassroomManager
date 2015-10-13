@@ -1,0 +1,29 @@
+﻿@model HomeReadingManager.Models.Student
+@{
+    Layout = null;
+}
+
+<tr>
+    @Html.HiddenFor(model => model.Student_Id, new { @class = "studentId" })
+    <td>
+        @Html.DisplayFor(model => model.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.LastName)
+    </td>
+
+    <td>
+         @Html.DropDownListFor(model => model.Classes_Id, ViewBag.ClassId as SelectList, new { @class = "classes", @data_Id = Model.Student_Id })
+    </td>
+
+    <td>
+       @Html.DropDownListFor(model => model.Levels_Id, ViewBag.LevelId as SelectList, new { @class = "levels",  @data_Id = Model.Student_Id })
+    </td>
+    <td>
+
+    <td>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.Student_Id, classFilter = ViewBag.ClassFilter, searchString = ViewBag.SearchString, lastOrder = ViewBag.SortColumn, page = ViewBag.Page }) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Student_Id, classFilter = ViewBag.ClassFilter, searchString = ViewBag.SearchString, lastOrder = ViewBag.SortColumn, page = ViewBag.Page }) |
+        @Html.ActionLink("Details", "Details", new { id = Model.Student_Id, classFilter = ViewBag.ClassFilter, searchString = ViewBag.SearchString, lastOrder = ViewBag.SortColumn, page = ViewBag.Page })
+    </td>
+</tr>

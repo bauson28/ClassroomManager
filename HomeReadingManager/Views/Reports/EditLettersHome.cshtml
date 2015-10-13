@@ -1,0 +1,124 @@
+﻿@model HomeReadingManager.ViewModels.LettersHome
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Overdue Books Letters</h2>
+
+@using (Html.BeginForm("EditLettersHome", "Reports", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.School)
+    @Html.HiddenFor(m=>m.LibraryId)
+    @Html.HiddenFor(m=>m.SortOrder)
+    @Html.HiddenFor(m=>m.Ascending)
+    @Html.HiddenFor(m=>m.Page)
+    @Html.HiddenFor(m=>m.Days)
+   
+    <div class="form-horizontal">
+        <h4>Edit the overdue books letter template</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.StLetter1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.StLetter1, 5, 1, new { @class = "textArea" })
+                @Html.ValidationMessageFor(model => model.StLetter1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StLetter2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.StLetter2, 5, 1, new { @class = "textArea" })
+                 @Html.ValidationMessageFor(model => model.StLetter2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StLetterName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StLetterName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StLetterName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StLetterPosition, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StLetterPosition, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StLetterPosition, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StLetterSize, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.RadioButtonFor(model => model.A4Page, true, new { id = "A4Size" })
+                <label for="A4Size">A4</label>
+               &nbsp;&nbsp;
+                @Html.RadioButtonFor(model => model.A4Page, false, new { id = "A5Size" })
+                <label for="A5Suize">A5</label>
+               
+                @Html.ValidationMessageFor(model => model.A4Page, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Crest, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @{
+                    if (Model.Crest_Id > 0)
+                    {
+                        string imageBase64 = Convert.ToBase64String(Model.Crest);
+                        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        <img src="@imageSrc" width="150" height="150" />
+                    }
+                    else
+                    {
+                    <text><i> No school crest image</i></text>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @if (Model.Crest_Id > 0)
+            {
+                @Html.LabelFor(model => model.Crest, "Change school crest", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+            else
+            {
+                @Html.LabelFor(model => model.Crest, "Add school crest", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+
+            <div class="col-md-10">
+                <input type="file" name="file" accept="image/*;capture=camera">
+                @* @Html.ValidationMessageFor(x => x.Jacket)*@
+            </div>
+           
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { days = Model.Days, reportType = 1, sortOrder = Model.SortOrder, asc = Model.Ascending, school = Model.School, libraryId = Model.LibraryId, page = Model.Page })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

@@ -1,0 +1,389 @@
+﻿@model HomeReadingManager.ViewModels.StudentReport
+
+<script type="text/javascript">
+    $(function () {
+        $('.setMark').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            var value = $(this).val();
+            var id = $(this).attr('id');
+            // alert("hyphen " + value + " " + id);
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/SetMark")",
+                data: {
+                    resultId: parseInt(value),
+                    markId: parseInt(id)
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.Success) {
+                        // alert("result " + result.Result);
+                        if (result.Result != "0") {
+                            var kids = $('div#' + value).children('button.btn-success').first();
+                            kids.removeClass('btn-success').addClass('btn-warning');
+                            //alert("result " + result.Result);
+                        }
+
+                        if (result.Result != "-1") {
+                            var kids = $('div#' + value).children('button#' + id).first();
+                            kids.removeClass('btn-warning').addClass('btn-success');
+                            //alert("kid2 " + 'div#' + value);
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('.setEffort').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            var value = $(this).val();
+            var id = $(this).attr('id');
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Content("~/Students/SetEffort")",
+                data: {
+                    resultId: parseInt(value),
+                    markId: parseInt(id)
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.Success) {
+                        if (result.Result != "0") {
+                            var kids = $('div#E' + value).children('button.btn-success');
+                            kids.removeClass('btn-success').addClass('btn-warning');
+                        }
+                        var kids = $('div#E' + value).children('button#' + id);
+                        kids.removeClass('btn-warning').addClass('btn-success');
+                    }
+                }
+            });
+        });
+    });
+
+
+    $(function () {
+        $('.toggleMark').on('click', function () {
+            var value = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/ToggleMark")",
+                data: {
+                    resultId: parseInt(value)
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.Success) {
+                        var image = $('#I' + value);
+                        if (result.Result == 1) {
+                            image.attr('src', '@Url.Content("~/Images/tick.jpg")');
+                        }
+                        else {
+                            image.attr('src', '@Url.Content("~/Images/cross.jpg")');
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('.saveKla').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            var id = $(this).attr('id');
+            var comments = $('#txtKla' + id).val();
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/SaveKlaComments")",
+                data: {
+                    id: parseInt(id),
+                    comments: comments
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.Success) {
+                        $('#saved' + id).html("Comments saved");
+                    }
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('#saveComments').on('click', function () {
+
+            var id = $('#studentReportId').val();
+            var teacher = $('#txtTeacher').val();
+            var teacher2 = $('#txtTeacher2').val();
+            var comments = $('#txtComments').val();
+            var fullDays = $('#txtFullDays').val();
+            var partDays = $('#txtPartDays').val();
+            var absentDate = $('#dpAbsentDate').val();
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/SaveComments")",
+                data: {
+                    id: parseInt(id),
+                    comments: comments,
+                    fullDays: parseInt(fullDays),
+                    partDays: parseInt(partDays),
+                    absentDate: absentDate,
+                    teacher: teacher,
+                    teacher2: teacher2
+                },
+                dataType: 'json',
+                success: function (result) {
+                    //if (result.Success) {
+                    $('#saved').html("Comments saved");
+                    //}
+                },
+                error: function (result) {
+                    //if (result.Success) {
+
+                    $('#saved').html("Failed");
+                    //}
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('#cancelApproval').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            var id = $('#studentReportId').val();
+            ApproveReport(id, true);
+        });
+    });
+
+    $(function () {
+        $('#approve').on('click', function () {
+            var id = $('#studentReportId').val();
+            ApproveReport(id, false);
+        });
+    });
+
+    function ApproveReport(id, cancel) {
+
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Content("~/Students/ApproveReport")",
+            data: {
+                id: parseInt(id),
+                cancel: cancel
+            },
+            dataType: 'json',
+            success: function (result) {
+                if (result.Success) {
+                    if (cancel) {
+                        $('#dvApproved').html("Not approved");
+                    }
+                    else {
+                        $('#dvApproved').html(result.Result);
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    for (var klaIndex = 0; klaIndex < Model.Klas.Count(); klaIndex++)
+    {
+        var kla = Model.Klas.ElementAt(klaIndex);
+        <div id="dvContainer">
+            <div class="bg-primary input-lg" style="text-overflow: ellipsis">
+                <div>@Html.DisplayFor(m => kla.Subject)</div>
+            </div>
+
+            @if (kla.ReportType == 1)
+            {
+                if (Model.MarksList != null)
+                {
+                    <div class="outer">
+                        <div class="centre">
+                            <div class="marksLabel">
+                                <span>Overall achievement</span>
+                            </div>
+                            <div id=@kla.ResultsId class="marks">
+                                @foreach (var row in Model.MarksList.Where(m => m.AssessmentId == kla.AssessListId))
+                                {
+                                    if (row.Id == kla.MarksId)
+                                    {
+                                        //string unique = kla.ResultsId.ToString() + row.Id.ToString();
+                                        <button type="button" class="btn btn-success btn-wide btn-sm setMark" id=@row.Id value=@kla.ResultsId>@row.Name</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-warning btn-wide btn-sm setMark" id=@row.Id value=@kla.ResultsId>@row.Name</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    string thisDivId = "E" + kla.ResultsId.ToString();
+                    <div class="outer">
+                        <div class="centre">
+                            <div class="marksLabel">
+                                <span>Effort</span>
+                            </div>
+
+                            <div id=@thisDivId class="marks">
+                                @foreach (var row in Model.MarksList.Where(m => m.AssessmentId == kla.EffortListId))
+                                {
+                                    // string thisId = "E" + row.Id;
+                                    if (row.Id == kla.EffortId)
+                                    {
+
+                                        <button type="button" class="btn btn-success btn-wide btn-sm setEffort" id=@row.Id value=@kla.ResultsId>@row.Name</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-warning btn-wide btn-sm setEffort" id=@row.Id value=@kla.ResultsId>@row.Name</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            @foreach (var substrand in Model.Substrands2.Where(m => m.ParentId == kla.SubjectId).OrderBy(m => m.ColOrder))
+            {
+                string thisDivId = "E" + @substrand.ResultsId.ToString();
+
+
+                <div class="outer">
+                    <div class="centre">
+                        <div class="marksLabel" style="text-overflow: ellipsis">
+                            <span>@Html.DisplayFor(row => substrand.Subject)</span>
+                        </div>
+                        <div id=@thisDivId class="marks">
+                            @foreach (var row in Model.MarksList.Where(m => m.AssessmentId == kla.EffortListId))
+                            {
+                                if (row.Id == substrand.EffortId)
+                                {
+                                    <button type="button" class="btn btn-success btn-wide btn-sm setEffort" id=@row.Id value=@substrand.ResultsId>@row.Name</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-warning btn-wide btn-sm setEffort" id=@row.Id value=@substrand.ResultsId>@row.Name</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+
+            @foreach (var topic in Model.Indicators.Where(m => m.ParentId == kla.SubjectId).OrderBy(m => m.ColOrder))
+            {
+                <div class="input-lg">
+                    <div class="indicator">
+                        @Html.DisplayFor(row => topic.Subject)
+                    </div>
+                    @if (Model.MarksList != null)
+                    {
+                        <div id=@topic.ResultsId class="pull-right">
+                            @foreach (var row in Model.MarksList.Where(m => m.AssessmentId == kla.AssessListId))
+                            {
+                                if (kla.ReportType == 4)
+                                {
+                                    string imageId = "I" + @topic.ResultsId.ToString();
+                                    string tickImage = "~/Images/tick.jpg";
+                                    string crossImage = "~/Images/cross.jpg";
+                                    <button type="button" class="btn  btn-sm  toggleMark showTick" id=@row.Id value=@topic.ResultsId>
+                                        <img id=@imageId class="tickImage" src=" @(topic.MarksId == 0 ? @Url.Content(@crossImage) : @Url.Content(@tickImage)) " />
+                                    </button>
+                                }
+                                else
+                                {
+                                    if (row.Id == topic.MarksId)
+                                    {
+                                        <button type="button" class="btn btn-success btn-letter setMark" id=@row.Id value=@topic.ResultsId>@row.Name.Substring(0, 1)</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-warning btn-letter setMark" id=@row.Id value=@topic.ResultsId>@row.Name.Substring(0, 1)</button>
+                                    }
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            }
+
+            @for (var ssIndex = 0; ssIndex < Model.Substrands.Where(m => m.ParentId == kla.SubjectId).Count(); ssIndex++)
+            {
+
+                var substrand = Model.Substrands.Where(m => m.ParentId == kla.SubjectId).OrderBy(m => m.ColOrder).ElementAt(ssIndex);
+
+                string thisDivId = "E" + @substrand.ResultsId.ToString();
+
+                <div id=@thisDivId class="bg-info input-lg" style="text-overflow: ellipsis">
+                    <strong>
+                        <span>@Html.DisplayFor(row => substrand.Subject)</span>
+                    </strong>
+                </div>
+                foreach (var area in Model.Indicators.Where(m => m.ParentId == substrand.SubjectId).OrderBy(m => m.ColOrder))
+                {
+                    <div class="input-lg">
+                        <div class="indicator">
+                            @Html.DisplayFor(row => area.Subject)
+                        </div>
+                        @if (Model.MarksList != null)
+                        {
+                            <div id=@area.ResultsId class="pull-right">
+                                @foreach (var row in Model.MarksList.Where(m => m.AssessmentId == kla.AssessListId))
+                                {
+                                    if (row.Id == area.MarksId)
+                                    {
+                                        <button type="button" class="btn btn-success btn-letter setMark" id=@row.Id value=@area.ResultsId>@row.Name.Substring(0, 1)</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-warning btn-letter setMark" id=@row.Id value=@area.ResultsId>@row.Name.Substring(0, 1)</button>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            @if (kla.KlaComments)
+            {
+
+                string thisKlaId = "txtKla" + @kla.ResultsId.ToString();
+                string thisSaved = "saved" + @kla.ResultsId.ToString();
+                <div class="bg-info input-lg">
+                    Comments for&nbsp;@Html.DisplayFor(m => kla.Subject)
+
+
+                    <div class="pull-right">
+
+                        <button type="button" class="btn btn-success btnMedium saveKla" id=@kla.ResultsId>Save Comments</button>
+
+                    </div>
+
+                </div>
+                <div>
+                    @Html.TextAreaFor(k => kla.Comments, 10, 1, new { @class = "textArea", id = @thisKlaId })
+                    <p class="textRedSmall" id=@thisSaved></p>
+                </div>
+            }
+        </div>
+        <hr />
+    }
+}
+
+

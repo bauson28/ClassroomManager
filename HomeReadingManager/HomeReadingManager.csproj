@@ -1,0 +1,767 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8116034D-CEBF-4C25-AFEB-AD641AD90B89}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HomeReadingManager</RootNamespace>
+    <AssemblyName>HomeReadingManager</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44301</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.5.4\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.4\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.2.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\Sendgrid.5.1.0\lib\SendGridMail.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.1.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.2.1.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.2.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.2.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BarcodeLabelsController.cs" />
+    <Compile Include="Controllers\ClassesController.cs" />
+    <Compile Include="Controllers\CsvImportController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoansController.cs" />
+    <Compile Include="Controllers\ProdAuthorsController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\StocktakeController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\SubjectsController.cs" />
+    <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\TitleSearchController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503200001102_Birthdate.cs" />
+    <Compile Include="Migrations\201503200001102_Birthdate.Designer.cs">
+      <DependentUpon>201503200001102_Birthdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Annotation.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetRole.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogin.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Assessment.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BooksRead.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CardAddress.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Class.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ContactTitle.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Country.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CsvList.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C__MigrationHistory.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DefaultKla.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Grade.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GradeReport.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HomeReading.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HomeReading.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HomeReading.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HomeReading.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HomeReading.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ImportData.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportFile.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportMap.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Level.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LibImage.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Library.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Loan.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mark.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OnixAuthorRole.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Parent.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PrintLabel.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProdAuthor.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProdAvailability.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProdImage.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProdStock.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Relationship.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReportSchool.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReportStudent.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Result.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Semester.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\STCount.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StSession.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Student.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StudentContact.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Subject.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SystemVar.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Teacher.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserSetting.cs">
+      <DependentUpon>HomeReading.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MyClasses\CsvReader.cs" />
+    <Compile Include="MyClasses\GeneralClass.cs" />
+    <Compile Include="MyClasses\GoogleBooks.cs" />
+    <Compile Include="MyClasses\HelperClasses.cs" />
+    <Compile Include="MyClasses\PrintHelpers.cs" />
+    <Compile Include="MyClasses\ProductClass.cs" />
+    <Compile Include="MyClasses\ValidationClasses.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\BarcodeLabels.cs" />
+    <Compile Include="ViewModels\HomeReading.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\Imports.cs" />
+    <Compile Include="ViewModels\OverdueList.cs" />
+    <Compile Include="ViewModels\ProductList.cs" />
+    <Compile Include="ViewModels\ProductSearch.cs" />
+    <Compile Include="ViewModels\ReportData.cs" />
+    <Compile Include="ViewModels\SchoolReports.cs" />
+    <Compile Include="ViewModels\Stocktake.cs" />
+    <Compile Include="ViewModels\MyClass.cs" />
+    <Compile Include="ViewModels\TeacherList.cs" />
+    <Compile Include="ViewModels\TitleSearch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker.css" />
+    <Content Include="Content\datepicker3.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Images\BarcodeLabels.jpg" />
+    <Content Include="Images\cross.jpg" />
+    <Content Include="Images\dash.jpg" />
+    <Content Include="Images\DeptEd.jpg" />
+    <Content Include="Images\ExcelList.jpg" />
+    <Content Include="Images\NoJacket1.jpg" />
+    <Content Include="Images\SchoolHouse2.jpg" />
+    <Content Include="Images\StudentBoy.jpg" />
+    <Content Include="Images\StudentGirl.jpg" />
+    <Content Include="Images\StudentsBook.jpg" />
+    <Content Include="Images\StudentsDesk.jpg" />
+    <Content Include="Images\StudentsGroup.jpg" />
+    <Content Include="Images\StudentsTrio.jpg" />
+    <Content Include="Images\TeacherOwl.jpg" />
+    <Content Include="Images\ThreeKids.jpg" />
+    <EntityDeploy Include="Models\HomeReading.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>HomeReading.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Images\tick.jpg" />
+    <Content Include="Models\HomeReading.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HomeReading.edmx</DependentUpon>
+      <LastGenOutput>HomeReading.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\HomeReading.edmx.diagram">
+      <DependentUpon>HomeReading.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\HomeReading.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HomeReading.edmx</DependentUpon>
+      <LastGenOutput>HomeReading.cs</LastGenOutput>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\wells.less" />
+    <Content Include="Content\bootstrap\variables.less" />
+    <Content Include="Content\bootstrap\utilities.less" />
+    <Content Include="Content\bootstrap\type.less" />
+    <Content Include="Content\bootstrap\tooltip.less" />
+    <Content Include="Content\bootstrap\thumbnails.less" />
+    <Content Include="Content\bootstrap\theme.less" />
+    <Content Include="Content\bootstrap\tables.less" />
+    <Content Include="Content\bootstrap\scaffolding.less" />
+    <Content Include="Content\bootstrap\responsive-utilities.less" />
+    <Content Include="Content\bootstrap\progress-bars.less" />
+    <Content Include="Content\bootstrap\print.less" />
+    <Content Include="Content\bootstrap\popovers.less" />
+    <Content Include="Content\bootstrap\panels.less" />
+    <Content Include="Content\bootstrap\pagination.less" />
+    <Content Include="Content\bootstrap\pager.less" />
+    <Content Include="Content\bootstrap\normalize.less" />
+    <Content Include="Content\bootstrap\navs.less" />
+    <Content Include="Content\bootstrap\navbar.less" />
+    <Content Include="Content\bootstrap\modals.less" />
+    <Content Include="Content\bootstrap\mixins.less" />
+    <Content Include="Content\bootstrap\media.less" />
+    <Content Include="Content\bootstrap\list-group.less" />
+    <Content Include="Content\bootstrap\labels.less" />
+    <Content Include="Content\bootstrap\jumbotron.less" />
+    <Content Include="Content\bootstrap\input-groups.less" />
+    <Content Include="Content\bootstrap\grid.less" />
+    <Content Include="Content\bootstrap\glyphicons.less" />
+    <Content Include="Content\bootstrap\forms.less" />
+    <Content Include="Content\bootstrap\dropdowns.less" />
+    <Content Include="Content\bootstrap\component-animations.less" />
+    <Content Include="Content\bootstrap\code.less" />
+    <Content Include="Content\bootstrap\close.less" />
+    <Content Include="Content\bootstrap\carousel.less" />
+    <Content Include="Content\bootstrap\buttons.less" />
+    <Content Include="Content\bootstrap\button-groups.less" />
+    <Content Include="Content\bootstrap\breadcrumbs.less" />
+    <Content Include="Content\bootstrap\bootstrap.less" />
+    <Content Include="Content\bootstrap\badges.less" />
+    <Content Include="Content\bootstrap\alerts.less" />
+    <Content Include="Content\less\bootstrap-datetimepicker-build.less" />
+    <Content Include="Content\less\_bootstrap-datetimepicker.less" />
+    <None Include="AppSettingsSecrets.config.ignore" />
+    <None Include="Properties\PublishProfiles\ClassroomManager %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\ClassroomManager %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\ClassroomManager.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\less-1.4.1.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.az.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-GB.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eu.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fo.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hy.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it-CH.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ka.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kh.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.no.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="Scripts\modalform.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\npm.js" />
+    <Content Include="Scripts\printApp.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\studentloans.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Teachers\Create.cshtml" />
+    <Content Include="Views\Teachers\Delete.cshtml" />
+    <Content Include="Views\Teachers\Edit.cshtml" />
+    <Content Include="Views\Teachers\Index.cshtml" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\ProdAuthors\_Create.cshtml" />
+    <Content Include="Views\ProdAuthors\_Delete.cshtml" />
+    <Content Include="Views\ProdAuthors\_Edit.cshtml" />
+    <Content Include="Views\ProdAuthors\_Index.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Home\_Lyubomir.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\_Overdue.cshtml" />
+    <Content Include="Views\Reports\_School.cshtml" />
+    <Content Include="Views\Reports\_Class.cshtml" />
+    <Content Include="Views\Reports\_Student.cshtml" />
+    <Content Include="Views\Reports\_Borrowed.cshtml" />
+    <Content Include="Views\Reports\_SelectReport.cshtml" />
+    <Content Include="Views\Reports\_StudentSearch.cshtml" />
+    <Content Include="Views\Reports\Print.cshtml" />
+    <Content Include="Views\Reports\EditLettersHome.cshtml" />
+    <Content Include="Views\Stocktake\Index.cshtml" />
+    <Content Include="Views\Stocktake\Counting.cshtml" />
+    <Content Include="Views\Stocktake\NewSession.cshtml" />
+    <Content Include="Views\Stocktake\_CountingList.cshtml" />
+    <Content Include="Views\Stocktake\ProcessStocktake.cshtml" />
+    <Content Include="Views\Stocktake\_SelectSession.cshtml" />
+    <Content Include="Views\Stocktake\_Report.cshtml" />
+    <Content Include="Views\Stocktake\_NewSession.cshtml" />
+    <Content Include="Views\Reports\_TitleSearch.cshtml" />
+    <Content Include="Views\Stocktake\_TitleSearch.cshtml" />
+    <Content Include="Views\Classes\Create.cshtml" />
+    <Content Include="Views\Classes\Delete.cshtml" />
+    <Content Include="Views\Classes\Edit.cshtml" />
+    <Content Include="Views\Classes\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Student.cshtml" />
+    <Content Include="Views\BarcodeLabels\Index.cshtml" />
+    <Content Include="Views\BarcodeLabels\_LabelsList.cshtml" />
+    <Content Include="Views\BarcodeLabels\_NoRecords.cshtml" />
+    <Content Include="Views\BarcodeLabels\Edit.cshtml" />
+    <Content Include="Views\BarcodeLabels\_TitleSearch.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MappingColumn.cshtml" />
+    <Content Include="Views\TitleSearch\Index.cshtml" />
+    <Content Include="Views\TitleSearch\_TitleDetails.cshtml" />
+    <Content Include="Views\TitleSearch\_NoDetails.cshtml" />
+    <Content Include="Views\Subjects\EditFrontPage.cshtml" />
+    <Content Include="Views\Subjects\Index.cshtml" />
+    <Content Include="Views\Subjects\_CreateSubstrand.cshtml" />
+    <Content Include="Views\Shared\_ModalPopup.cshtml" />
+    <Content Include="Views\Subjects\_CreateArea.cshtml" />
+    <Content Include="Views\Subjects\_CreateKla.cshtml" />
+    <Content Include="Views\Subjects\_EditKla.cshtml" />
+    <Content Include="Views\Subjects\_EditArea.cshtml" />
+    <Content Include="Views\Subjects\_Delete.cshtml" />
+    <Content Include="Views\Subjects\EditArea.cshtml" />
+    <Content Include="Views\Subjects\ReportForm.cshtml" />
+    <Content Include="Views\Subjects\_EditSubstrand.cshtml" />
+    <Content Include="Views\Students\SelectClass.cshtml" />
+    <Content Include="Views\Students\MyClass.cshtml" />
+    <Content Include="Views\Students\Loans.cshtml" />
+    <Content Include="Views\Students\SchoolReports.cshtml" />
+    <Content Include="Views\Students\OrganiseClass.cshtml" />
+    <Content Include="Views\Students\_StudentReport.cshtml" />
+    <Content Include="Views\Students\HomeReading.cshtml" />
+    <Content Include="Views\Students\_Summary.cshtml" />
+    <Content Include="Views\Students\_Organise.cshtml" />
+    <Content Include="Views\Students\_HomeReading.cshtml" />
+    <Content Include="Views\Students\_SchoolReports.cshtml" />
+    <Content Include="Views\Students\_Edit.cshtml" />
+    <Content Include="Views\Shared\_MyPartial.cshtml" />
+    <Content Include="Views\Students\_NoData.cshtml" />
+    <Content Include="Views\Students\_StudentLoans.cshtml" />
+    <Content Include="Views\Students\_BookSearch.cshtml" />
+    <Content Include="Views\Loans\StudentLoans.cshtml" />
+    <Content Include="Views\Loans\_StudentSearch.cshtml" />
+    <Content Include="Views\Loans\_StudentList.cshtml" />
+    <Content Include="Views\Loans\_Loans.cshtml" />
+    <Content Include="Views\Loans\_BookSearch.cshtml" />
+    <Content Include="Views\Loans\_SelectedStudent.cshtml" />
+    <Content Include="Views\Classes\EditClasses.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ClassDetail.cshtml" />
+    <Content Include="Views\Students\_Details.cshtml" />
+    <Content Include="Views\Students\_Create.cshtml" />
+    <Content Include="Views\Students\_ReadLevel.cshtml" />
+    <Content Include="Views\Subjects\_NextSemester.cshtml" />
+    <Content Include="Views\Shared\Info.cshtml" />
+    <Content Include="Views\CsvImport\Index.cshtml" />
+    <Content Include="Views\CsvImport\SelectFile.cshtml" />
+    <Content Include="Views\CsvImport\_ImportList.cshtml" />
+    <Content Include="Views\CsvImport\_Mapping.cshtml" />
+    <Content Include="Views\CsvImport\_Help.cshtml" />
+    <Content Include="Views\Students\FindStudent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Enum\" />
+    <Folder Include="Imports\" />
+    <Folder Include="PDFs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503200001102_Birthdate.resx">
+      <DependentUpon>201503200001102_Birthdate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50027</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44301/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

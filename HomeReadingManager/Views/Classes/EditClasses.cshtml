@@ -1,0 +1,152 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.ClassesVM
+
+@{
+    ViewBag.Title = "EditClasses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Edit Classes</h2>
+
+<p>
+    @Html.ActionLink("Create new class", "Create")
+    &nbsp; &nbsp; &nbsp;
+    @Html.ActionLink("End editing", "Index", new { showInactive = false, editMode = false })
+</p>
+
+@using (Html.BeginForm())
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().ClassName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Stage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassDetails.First().Inactive)
+            </th>
+        </tr>
+
+        @foreach (var item in Model.ClassDetails.Where(x => x.Inactive == Model.ShowInactive))
+        {
+            <tr>
+                <td>
+                    @item.ClassName
+                </td>
+                <td>
+                    @item.Stage
+                </td>
+
+                <td>
+                    @Html.DropDownListFor(m => item.TeacherId, new SelectList(ViewBag.TeachersList, "Id", "Teacher", item.TeacherId), "Not set", new { @class = "teachers", @data_id = @item.ClassId })
+                    @Html.ValidationMessageFor(m => item.TeacherId, "", new { @class = "text-danger" })
+                </td>
+
+                <td>
+                    @*@Html.DropDownListFor(m => item.TeacherId2, new SelectList(Model.Teachers, "Id", "Teacher", item.TeacherId2), "Not set", new { @class = "teachers2", @data_id = @item.ClassId })
+                    @Html.ValidationMessageFor(m => item.TeacherId2, "", new { @class = "text-danger" })*@
+                </td>
+
+                <td>
+                    <div class="checkbox chInactive" data-id=@item.ClassId>
+                        @Html.EditorFor(m => item.Inactive)
+                        @Html.ValidationMessageFor(model => item.Inactive, "", new { @class = "text-danger" })
+                    </div>
+                </td>
+            </tr>
+        }
+        @*@foreach (var item in Model.ClassDetails.Where(x => x.Inactive == Model.ShowInactive))
+            {
+               @Html.EditorFor(m=>item)
+
+            }*@
+
+    </table>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(function () {
+                $('.teachers').on('change', function () {
+                    var teacherId = $(this).val();
+                    var id = $(this).attr('data-Id');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Classes/AssignToClass")",
+                        data: {
+                            id: id,
+                            teacherId: teacherId,
+                            second: false
+                        },
+                        dataType: 'html', //dataType - html
+                        success: function (result) {
+                            if (result.Success) {
+                                //baf need to show message
+                            }
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('.teachers2').on('change', function (evt) {
+                    var teacherId = $(this).val();
+                    var id = $(this).attr('data-Id');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Classes/AssignToClass")",
+                        data: {
+                            id: id,
+                            teacherId: teacherId,
+                            second: true
+                        },
+                        dataType: 'html', //dataType - html
+                        success: function (result) {
+                            if (result.Success) {
+                                //baf need to show message
+                            }
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('.chInactive').on('change', function () {
+                    var id = $(this).attr('data-Id');
+                    //alert('here ' + id);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Classes/MakeInactive")",
+                        data: {
+                            id: id,
+                        },
+                        dataType: 'html', //dataType - html
+                        success: function (result) {
+                            if (result.Success) {
+                                //baf need to show message
+                            }
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
+}

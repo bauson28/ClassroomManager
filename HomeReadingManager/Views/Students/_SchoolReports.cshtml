@@ -1,0 +1,124 @@
+﻿@model HomeReadingManager.ViewModels.StudentReport
+
+@{
+    ViewBag.Title = "StudentReports";
+    Layout = "~/Views/Shared/_MyPartial.cshtml";
+}
+
+<div class="col-md-9 centeredHeader">
+    <h2>@Html.DisplayFor(m => m.Student)</h2>
+    <h4>@Html.DisplayFor(m => m.ReportName)</h4>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="col-md-9">
+        @Html.HiddenFor(m => m.StudentReportId, new { id = "studentReportId" })
+
+        @Html.ActionLink("Print report", "PrintSchoolReport", new { studId = Model.StudentId, schoolRepId = Model.SchoolReportId, libraryId = Model.LibraryId }, new { target = "_blank" })
+       
+        <div id="dvReports col-md-12">
+            @Html.Partial("~/Views/Students/_StudentReport.cshtml", Model)
+        </div>
+
+
+        <div class="bg-primary input-lg">
+            <div>@Html.DisplayFor(m => m.CommentHeader)</div>
+        </div>
+        <div>
+            @Html.TextAreaFor(m => m.Comments, 10, 1, new { @class = "textArea", id = "txtComments" })
+        </div>
+
+        <hr />
+        <div class="bg-primary input-lg">
+            Absences
+        </div>
+        <div class="input-lg">
+
+            <div class="col-md-6">
+                <span>
+                    <small>
+                        @Html.DisplayNameFor(m => m.AbsentDate)
+                        @*@Html.EditorFor(m => m.AbsentDate)*@
+                        @Html.TextBoxFor(m => m.AbsentDate, new { Value = Model.AbsentDate.ToString("dd-MM-yyyy"), @class = "datepicker", @data_provide = "datepicker", @id = "dpAbsentDate" })
+                        @* @Html.TextBoxFor(m => m.AbsentDate, new { Value = Model.AbsentDate.ToString("dd-MM-yyyy"), @class= "form-control datepicker", @data_provide = "datepicker", id = "dpAbsentDate" })*@
+                        @Html.ValidationMessageFor(model => model.AbsentDate, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+            <div class="col-md-3">
+                <span>
+                    <small>
+                        @Html.DisplayNameFor(m => m.AbsentFull)
+                        @Html.TextBoxFor(m => m.AbsentFull, new { style = "width:50px;", id = "txtFullDays" })
+                        @Html.ValidationMessageFor(model => model.AbsentFull, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+            <div class="col-md-3">
+                <span>
+                    <small>
+                        @Html.DisplayNameFor(m => m.AbsentPart)
+                        @Html.TextBoxFor(m => m.AbsentPart, new { style = "width:50px;", id = "txtPartDays" })
+                        @Html.ValidationMessageFor(model => model.AbsentPart, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+
+        </div>
+        <hr />
+        <div class=" bg-primary input-lg">
+            Signed by
+        </div>
+
+        <div class="row input-lg">
+            <div class="col-md-5">
+                <span>
+                    <small>
+                        @Html.DisplayNameFor(m => m.Teacher):
+                        @Html.TextBoxFor(m => m.Teacher, new { id = "txtTeacher" })
+                        @Html.ValidationMessageFor(model => model.Teacher, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+            <div class="col-md-5">
+                <span>
+                    <small>
+                        @Html.DisplayNameFor(m => m.Teacher2):
+                        @Html.TextBoxFor(m => m.Teacher2, new { id = "txtTeacher2" })
+                        @Html.ValidationMessageFor(model => model.Teacher2, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+            <div class="pull-right">
+                <button type="button" class="btn btn-success btnMedium" id="saveComments">Save Comments</button>
+                <p class="textRedSmall" id="saved"></p>
+            </div>
+        </div>
+
+        <hr />
+        <div class=" bg-primary input-lg">
+            Approved by
+        </div>
+
+        <div class="row input-lg">
+            <div class="col-md-4" id="dvApproved">
+                <span>
+                    <small>
+                        @Html.DisplayFor(m => m.ApprovedBy, new { @class = "form-control", id = "txtApprovedBy" })
+                        @Html.ValidationMessageFor(model => model.ApprovedBy, "", new { @class = "text-danger" })
+                    </small>
+                </span>
+            </div>
+
+            <div class="pull-right">
+                <button type="button" class="btn btn-danger btnMedium" id="approve">Approve</button>
+                <span>
+                    <small>
+                        @Html.ActionLink("Cancel", "", "Students", new { id = "cancelApproval" })
+                    </small>
+                </span>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,60 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.AuthorsModel
+
+<div class="panel panel-default">
+
+
+    @*<div class="panel-heading">
+            <strong>Authors</strong>
+        </div>*@
+
+    <table class="table table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Authors.FirstOrDefault().AuthorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Authors.FirstOrDefault().Role)
+            </th>
+
+            <th>
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "Create", "ProdAuthors", routeValues: new { ProductId = Model.ProductId, Title = Model.Title }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary pull-right" })
+            </th>
+        </tr>
+        @if (Model.Authors.Count() == 0)
+        {
+            <tr>
+                <td rowspan="3">
+                   No author listed
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model.Authors)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuthorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Role)
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "ProdAuthors", routeValues: new { id = item.Id, productId = Model.ProductId, title = Model.Title }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary" })
+                            &nbsp;
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "ProdAuthors", routeValues: new { id = item.Id, productId = Model.ProductId, title = Model.Title }, htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+</div>
+
+@*@Scripts.Render("~/bundles/modalform")*@
+
+

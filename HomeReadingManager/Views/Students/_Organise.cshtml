@@ -1,0 +1,272 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.MyClass
+
+@{
+    ViewBag.Title = "OrganiseClass";
+    Layout = "~/Views/Shared/_MyPartial.cshtml";
+}
+
+
+
+<div class="col-md-12">
+    @using (Html.BeginForm("MyClass", "Students", FormMethod.Get, new { id = "thisForm" }))
+    {
+        <table class="table">
+            <tr style="height:35px">
+                <th>
+                    @if (Model.EditHeader.IsEmpty())
+                    {
+                        @Html.ActionLink("M/F", "OrganiseClass", routeValues: null, htmlAttributes: new { @class = "organiseSort", @id = "Gender" })
+                    }
+                    else
+                    {
+                        <span>M/F</span>
+                    }
+                </th>
+                <th>
+                    @if (Model.EditHeader.IsEmpty())
+                    {
+                        @Html.ActionLink("Student", "OrganiseClass", routeValues: null, htmlAttributes: new { @class = "organiseSort", @id = "FirstName" })
+                    }
+                    else
+                    {
+                        <span>Student</span>
+                    }
+                </th>
+                <th>
+                    @if (Model.EditHeader.IsEmpty())
+                    {
+                        @Html.ActionLink("Grade", "OrganiseClass", routeValues: null, htmlAttributes: new { @class = "organiseSort", id = "Grade" })
+                    }
+                    else
+                    {
+                        <span>Grade</span>
+                    }
+                </th>
+                <th>
+                    <div>
+                        Select
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        Edit
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        Details
+                    </div>
+                </th>
+                <th>
+                    Read level
+                </th>
+                <th>
+                    @Model.EditHeader
+                </th>
+                @*<th>
+
+            </th>*@
+            </tr>
+
+            @{
+        var studList = Model.StudentVMs.ToList();
+            }
+            @for (int i = 0; i < studList.Count(); i++)
+            {
+                var item = studList.ElementAt(i);
+                var hrId = "hr" + item.Id;
+                var ssId = "ss" + item.Id;
+                <tr id= @ssId style="height:57px">
+                    <td>
+                        @{
+                            if (item.Gender == "M")
+                            {
+                                <img src="~/Images/StudentBoy.jpg" width="31" height="40" />
+                            }
+                            else if (item.Gender == "F")
+                            {
+                                <img src="~/Images/StudentGirl.jpg" width="31" height="40" />
+                            }
+                            else
+                            {
+                                <img src="~/Images/TeacherOwl.jpg" width="31" height="40" />
+                            }
+                        }
+                    </td>
+                    <td>
+                        @item.FullName.Substring(0, 22)
+                    </td>
+                    <td>
+                        @item.Grade
+                    </td>
+                    <td class="selectStudent">
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-hand-left'></span>", "Select student", "", "Students", routeValues: null,
+                                                                   htmlAttributes: new { @class = "btn btn-success selectStudent", @data_Id = item.Id, @id = item.GradeId })
+                    </td>
+                    <td>
+                        <div>
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "Students", routeValues: new
+                                                        {
+                                                            id = item.Id,
+                                                            classId = Model.ClassId,
+                                                            sortOrder = Model.SortOrder,
+                                                            asc = Model.Ascending,
+                                                            libraryId = Model.LibraryId
+                                                        },
+                                                 htmlAttributes: new { @class = "modal-link btn btn-info editStudent", @data_Id = item.Id })
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            @*@Html.NoEncodeActionLink("<span class='glyphicon glyphicon-search'></span>", "Details", "", "Students", routeValues: new { id = item.Id },
+                                                                                    htmlAttributes: new { @class = "btn btn-primary details", @id = item.Id })*@
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-search'></span>", "Details", "", "Students", routeValues: new { id = item.Id },
+                                                                             htmlAttributes: new { @class = "btn btn-primary details", @data_Id = item.Id })
+                        </div>
+                    </td>
+                    <td>
+                        <div id=@hrId>
+                            @item.LevelId
+                        </div>
+                    </td>
+                    <td>
+                        <div data-id=@item.Id>
+                            @if (Model.EditLevels)
+                            {
+                                @Html.DropDownListFor(m => item.LevelId, new SelectList(Model.Levels, "Id", "Level", item.LevelId), "Not set", new { @class = "ddlMedWidth ddlLevel" })
+                            }
+                            else if (Model.EditClasses)
+                            {
+                                @Html.DropDownListFor(m => item.ClassId, new SelectList(Model.Classes, "Id", "ClassName", item.ClassId), "No class", new { @class = "ddlMedWidth ddlClass" })
+                            }
+                        </div>
+                    </td>
+                    @*<td></td>*@
+                </tr>
+            }
+
+           
+        </table>
+
+    }
+
+</div>
+<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content">
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        id = window.parent.$('#selectedId').val();
+        if (id > 0) {
+
+            $('#ss' + id).addClass('selectedId');
+         }
+
+        function set(value) {
+            return value;
+        }
+
+        $(function () {
+            $('.details').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                //id = $(this).attr('id');
+                var id = $(this).attr('data-Id');
+                sortOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+                asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+                window.parent.$('#selectedId').val(id);
+                $(".selectedId").removeClass('selectedId');
+                $('#ss' + id).addClass('selectedId');
+                $('#' + id).addClass('selectedId');
+                // window.parent.$('#selectedGrade').val(gradeId);
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Students/Details")",
+                    data: {
+                        id: parseInt(id),
+                        sortOrder: sortOrder,
+                        asc: asc
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#dvMain").show();
+                        $("#dvActivity").removeClass("col-md-12").addClass("col-md-9")
+                        $("#dvActivity").empty().append(result);
+                        $('#activity').val('Details');
+                        $("#addIcon").hide();
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $('.editStudent').on('click', function (evt) {
+                var id = $(this).attr('data-Id');
+                window.parent.$('#selectedId').val(id);
+                $(".selectedId").removeClass('selectedId');
+                $('#ss' + id).addClass('selectedId');
+                $('#' + id).addClass('selectedId');
+               // alert("here");
+                // window.parent.$('#selectedGrade').val(gradeId);
+            });
+        });
+
+        $(function () {
+            $('.organiseSort').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+
+                classId = set(@Html.Raw(Json.Encode(Model.ClassId)));
+                className = set(@Html.Raw(Json.Encode(Model.ClassName)));
+                sortOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+                asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+                libraryId = set(@Html.Raw(Json.Encode(Model.LibraryId)));
+                editLevels = set(@Html.Raw(Json.Encode(Model.EditLevels)));
+                editClasses= set(@Html.Raw(Json.Encode(Model.EditClasses)));
+                var newOrder = $(this).attr('id')
+
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/Students/OrganiseClass")",
+                    data: {
+                        classId: classId,
+                        className: className,
+                        newOrder: newOrder,
+                        sortOrder: sortOrder,
+                        asc: asc,
+                        editLevels: editLevels,
+                        editClasses: editClasses,
+                        libraryId: libraryId
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#dvActivity").empty().append(result);
+                    }
+                });
+            });
+        });
+
+
+        $(function () {
+            $('.selectStudent').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).data('id')
+                var gradeId = $(this).attr('id')
+                //$("#selectedId").val(id);
+                $(".selectedId").removeClass('selectedId');
+                $('#ss' + id).addClass('selectedId');
+                $('#' + id).addClass('selectedId');
+                //$('#selectedGrade').val(gradeId);
+                window.parent.$('#selectedId').val(id);
+                window.parent.$('#selectedGrade').val(gradeId);
+          });
+        });
+
+    });
+</script>

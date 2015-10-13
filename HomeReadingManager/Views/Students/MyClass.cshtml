@@ -1,0 +1,516 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.MyClass
+
+@{
+    ViewBag.Title = "My Class";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("MyClass", "Students", FormMethod.Get, new { id = "thisForm" }))
+{
+    <h2>Class&nbsp;  @Html.DisplayFor(m => m.ClassName)</h2>
+    <div class="container row">
+        <button type="button" class="btn btn-primary btn-sm disabled setActivity" id="activityBtn1">Summary</button>
+        <button type="button" class="btn btn-danger btn-sm  setActivity" id="activityBtn2">Home Reading</button>
+        <button type="button" class="btn btn-success btn-sm  setActivity" id="activityBtn3">School Reports</button>
+        <button type="button" class="btn btn-warning btn-sm  setActivity" id="activityBtn4">Organise</button>
+        @Html.ActionLink("Select class", "SelectClass")
+        <div class="pull-right" id="addIcon" hidden="hidden">
+            <span id="spanClasses" style="color: blue">Edit classes</span>
+            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-link'></span>", "Edit classes", "EditClasses", "Students", routeValues: null
+                                                                                               , htmlAttributes: new { @class = "modal-link btn btn-info", @id = "editClasses" })
+            <span id="spanLevels" style="color: blue">Edit levels</span>
+            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-book'></span>", "Edit reading levels", "EditReadingLevels", "Students", routeValues: null
+                                                                                               , htmlAttributes: new { @class = "modal-link btn btn-warning", @id = "editLevels" })
+            <span style="color: blue">Add student</span>
+            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add new student", "Create", "Students", routeValues: new
+                                                                                               {
+                                                                                                   libraryId = Model.LibraryId,
+                                                                                                   classId = Model.ClassId,
+                                                                                                   sortOrder = Model.SortOrder,
+                                                                                                   asc = Model.Ascending,
+                                                                                                   className = Model.ClassName
+                                                                                               }, htmlAttributes: new { @class = "modal-link btn btn-primary" })
+        </div>
+        <div class="pull-right" id="printAll" hidden="hidden">
+            @Html.ActionLink("Print reports for class", "PrintSchoolReport", new { classes_Id = Model.ClassId, schoolRepId = Model.SchoolReportId, libraryId = Model.LibraryId }, new { target = "_blank" })
+        </div>
+        <div class="pull-right" id="dvOldReps" hidden="hidden">
+            @if (Model.ReadyReports != null)
+            {
+                <span>Select report:</span>
+                @Html.DropDownList("OldReports", new SelectList(Model.ReadyReports, "Id", "ReportName"), "---View earlier reports ---", new { @id = "ddlOldReport" })
+            }
+        </div>
+    </div>
+    
+    <div class="row">
+        @Html.HiddenFor(m => m.StudentId, new { id = "selectedId" })
+        @Html.HiddenFor(m => m.GradeId, new { id = "selectedGrade" })
+        @Html.HiddenFor(m => m.ClassId, new { id = "classId" })
+        @Html.HiddenFor(m => m.SortOrder, new { id = "sortOrder" })
+        @Html.HiddenFor(m => m.Ascending, new { id = "ascending" })
+        @Html.HiddenFor(m => m.Activity, new { id = "activity" })
+        @Html.HiddenFor(m => m.LibraryId, new { id = "libraryId" })
+        @*@Html.HiddenFor(m => m.Refresh, new { id = "refresh" })*@
+        <div class="col-md-3" id="dvMain">
+
+            <table class="table">
+                <tr style="height:35px">
+                    <th>
+                        @Html.ActionLink("M/F", "MyClass", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "Gender", sortOrder = Model.SortOrder, asc = Model.Ascending })
+                    </th>
+                    <th>
+                        @Html.ActionLink("Student", "MyClass", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "FirstName", sortOrder = Model.SortOrder, asc = Model.Ascending })
+                    </th>
+                    @*<th>
+                            @Html.ActionLink("Gr", "MyClass", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "Grade", sortOrder = Model.SortOrder, asc = Model.Ascending })
+                        </th>*@
+                    <th colspan="2" class="selectStudent">@Html.ActionLink("Grade", "MyClass", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "Grade", sortOrder = Model.SortOrder, asc = Model.Ascending })</th>
+                </tr>
+                @foreach (var item in Model.StudentVMs)
+                {
+                    <tr id=@item.Id style="height:57px">
+                        <td>
+                            @{
+                            if (item.Gender == "M")
+                            {
+                                <img src="~/Images/StudentBoy.jpg" width="31" height="40" />
+                            }
+                            else if (item.Gender == "F")
+                            {
+                                <img src="~/Images/StudentGirl.jpg" width="31" height="40" />
+                                @*string imageBase64 = Convert.ToBase64String(item.Portrait);
+                                        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                                    <img src="@imageSrc" width="47" height="60" />*@
+                            }
+                            else
+                            {
+                                <img src="~/Images/TeacherOwl.jpg" width="31" height="40" />
+                            }
+                            }
+                        </td>
+                        <td>
+                            @item.FullName.Substring(0, 22)
+                        </td>
+                        <td>
+                            @item.Grade
+                        </td>
+                        <td>
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-hand-left'></span>", "Select student", "", "Students", routeValues: null,
+                                                                   htmlAttributes: new { @class = "btn btn-success selectStudent", @data_Id = item.Id, @id = item.GradeId })
+                        </td>
+
+                    </tr>
+                }
+        </table>
+    </div>
+
+        <div class="col-md-9">
+            <div id="dvActivity">
+
+            </div>
+        </div>
+
+    </div>
+}
+@*<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content">
+
+    </div>
+</div>*@
+@section Scripts
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        function set(value) {
+            return value;
+        }
+
+        $(function () {
+            $('.datepicker').on('change', function () {
+                var thisDate = new Date(dateText);
+                var newFormat = $.datepicker.formatDate("d MM yy", thisDate);
+                $(this).val(newFormat);
+            });
+        });
+
+
+        id = set(@Html.Raw(Json.Encode(Model.StudentId)));
+            if (id > 0) {
+                $('#' + id).addClass('selectedId');
+            }
+
+            activity = $('#activity').val();
+
+            ShowActivity(activity);
+
+            function ShowActivity(activity) {
+                $('.setActivity').removeClass('disabled');
+                $("#addIcon").hide();
+                $("#printAll").hide();
+                $("#dvOldReps").hide();
+                id = $('#selectedId').val()
+                switch (activity) {
+                    case "Organise":
+                        sortOrder = $('#sortOrder').val()
+                        classId = $('#classId').val()
+                        asc = $('#ascending').val()
+
+                        if (classId > 0) {
+                            $('#activityBtn4').addClass('disabled');
+                            $('#activity').val(activity);
+                            LoadOrganise(id, classId, sortOrder, asc, false, false);
+                        }
+                        break;
+
+                    case "Home Reading":
+                        if (id > 0) {
+                            $('#activityBtn2').addClass('disabled');
+                            LoadHomeReading(id);
+                        }
+                        break;
+
+                    case "School Reports":
+                        gradeId = $('#selectedGrade').val()
+                        if (id > 0 && gradeId > 0) {
+                            $('#activityBtn3').addClass('disabled');
+                            LoadSchoolReport(id, gradeId);
+                        }
+                        break;
+
+                    case "Summary":
+                        sortOrder = $('#sortOrder').val()
+                        classId = $('#classId').val()
+                        className = set(@Html.Raw(Json.Encode(Model.ClassName)));
+                        asc = $('#ascending').val()
+                        if (classId > 0) {
+                            $('#activityBtn1').addClass('disabled');
+                            LoadSummary(id, sortOrder, className, classId, asc);
+                        }
+                        break;
+
+                    case "Details":
+                        sortOrder = $('#sortOrder').val()
+                        classId = $('#classId').val()
+                        asc = $('#ascending').val()
+
+                        if (classId > 0) {
+                            //$('#activityBtn4').addClass('disabled');
+                           // $('#activity').val(activity);
+                            LoadDetails(id);
+                        }
+                        break;
+
+                    default:
+                        LoadPleaseSelect();
+                        break;
+                }
+            }
+
+            $(function () {
+                $('.setActivity').on('click', function () {
+                    var activity = $(this).text();
+                    //var refresh = $('#refresh').val();
+                    //if (refresh) {
+                    //    RefreshClass(activity)
+                    //}
+                    //else {
+                    ShowActivity(activity);
+                    $('#activity').val(activity)
+                    //}
+                });
+            });
+
+            //    function RefreshClass(activity) {
+            //        $('#activity').val(activity)
+            //        $('#thisForm').submit();
+            //}
+
+            function LoadSummary(id, sortOrder, className, classId, asc) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Students/Summary")",
+                    data: {
+                        studentId: id,
+                        classId: parseInt(classId),
+                        className: className,
+                        sortOrder: sortOrder,
+                        asc: asc
+                    },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvActivity").empty().append(result);
+                    $("#dvMain").hide();
+                    $("#dvActivity").removeClass("col-md-9").addClass("col-md-12")
+                    $("#printAll").show();
+                }
+            });
+        }
+
+        function LoadOrganise(id, classId, sortOrder, asc, editLevels, editClasses) {
+            libraryId = $('#libraryId').val();
+           
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/OrganiseClass")",
+                data: {
+                    studentId: id,
+                    classId: parseInt(classId),
+                    sortOrder: sortOrder,
+                    asc: asc,
+                    libraryId: libraryId,
+                    editLevels: editLevels,
+                    editClasses: editClasses
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvMain").hide();
+                    $("#dvActivity").removeClass("col-md-9").addClass("col-md-12")
+                    $("#dvActivity").empty().append(result);
+                    $("#addIcon").show();
+                }
+            });
+        }
+
+        function LoadHomeReading(id) {
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/HomeReading")",
+                data: {
+                    studentId: parseInt(id),
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvMain").show();
+                    $("#dvActivity").removeClass("col-md-12").addClass("col-md-9")
+                    $("#dvActivity").empty().append(result);
+                    
+                }
+            });
+        }
+
+        function LoadDetails(id) {
+            sortOrder = $('#sortOrder').val()
+            asc = $('#ascending').val()
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/Details")",
+                data: {
+                    id: parseInt(id),
+                    sortOrder: sortOrder,
+                    asc: asc
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvMain").show();
+                    $("#dvActivity").removeClass("col-md-12").addClass("col-md-9")
+                    $("#dvActivity").empty().append(result);
+                }
+            });
+        }
+
+        function LoadSchoolReport(id, gradeId, schoolReportId) {
+            libraryId = $('#libraryId').val();
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/SchoolReports")",
+                data: {
+                    studentId: parseInt(id),
+                    gradeId: parseInt(gradeId),
+                    libraryId: libraryId,
+                    schoolReportId:schoolReportId
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvMain").show();
+                    $("#dvActivity").removeClass("col-md-12").addClass("col-md-9")
+                    $("#dvActivity").empty().append(result);
+                    $("#dvOldReps").show();
+                    if (schoolReportId == 0)
+                        $('#ddlOldReport').val(null);
+                    else
+                        $('#ddlOldReport').val(schoolReportId);
+                }
+            });
+        }
+
+        function LoadPleaseSelect() {
+            libraryId = $('#libraryId').val();
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/PleaseSelect")",
+                data: {
+                    libraryId: libraryId
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvActivity").empty().append(result);
+                    $('#activity').val('Select');
+                }
+            });
+        }
+
+        $(function () {
+            $('#cancelApproval').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $('#studentReportId').val();
+                ApproveReport(id, true);
+            });
+        });
+
+        $(function () {
+            $('.selectStudent').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).data('id')
+                activity = $('#activity').val();
+                var gradeId = $(this).attr('id')
+                $("#selectedId").val(id);
+                $(".selectedId").removeClass('selectedId');
+                $('#' + id).addClass('selectedId');
+                $('#selectedGrade').val(gradeId);
+                switch (activity) {
+                    case "Details":
+                        LoadDetails(id);
+                        break;
+                    case "Home Reading":
+                        LoadHomeReading(id);
+                        break;
+                    case "School Reports":
+                        LoadSchoolReport(id, gradeId, 0);
+                        break;
+                    default:
+
+                        break;
+                }
+            });
+        });
+
+        $(function () {
+            $('#editLevels').on('click', function () {
+               
+                if ($('#spanLevels').html() == 'Cancel edit') {
+                    $('#editClasses').removeClass('btn-danger').addClass('btn-info');
+                    $('#spanClasses').html('Edit classes');
+                    $('#spanLevels').html('Edit levels');
+                    ResetOrganise(false, false);
+                }
+                else if ($('#spanLevels').html() == 'Save changes') {
+                    var id;
+                    $(".ddlLevel").each(function (index) {
+                        var levelId = $(this).val();
+                        if (levelId > 0) {
+                            //level = $("option:selected", this).text();
+                            studId = $(this).parent().attr('data-id');
+                            //alert('start ' + studId + " levelid " + levelId + " text" + level);
+                            $.ajax({
+                                type: 'GET',
+                                url: "@Url.Content("~/Students/SetReadingLevel")",
+                                data: {
+                                    id: studId,
+                                    levelId: levelId
+                                },
+                                dataType: 'json',
+                                success: function (result) {
+                                    if (result.Success) {
+
+                                        //$('#hr' + result.Result).html(levelId);
+                                        // alert('result ' + result.Result + " studid " + studId + " text " + level + "html " + $('#hr' + result.Result).html());
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    $('#editLevels').removeClass('btn-danger').addClass('btn-warning');
+                    $('#spanLevels').html('Edit levels');
+                    $('#spanClasses').html('Edit classes');
+                    ResetOrganise(false, false);
+                }
+                else {
+                    ResetOrganise(true, false);
+                    $('#editLevels').removeClass('btn-warning').addClass('btn-danger');
+                    $('#spanLevels').html('Save changes');
+                    $('#spanClasses').html('Cancel edit');
+                }
+            });
+        });
+
+        $(function () {
+            $('#editClasses').on('click', function () {
+                if ($('#spanClasses').html() == 'Cancel edit') {
+                    $('#editLevels').removeClass('btn-danger').addClass('btn-warning');
+                    $('#spanLevels').html('Edit levels');
+                    $('#spanClasses').html('Edit classes');
+                    ResetOrganise(false, false);
+                }
+                else if ($('#spanClasses').html() == 'Save changes') {
+                    var classId = 0;
+                    var id;
+                    $(".ddlClass").each(function (index) {
+                        classId = $(this).val();
+                        if (classId > 0) {
+                            //className = $("option:selected", this).text();
+                            studId = $(this).parent().attr('data-id');
+                            //alert('start ' + studId + " classid " + classId );
+                            $.ajax({
+                                type: 'GET',
+                                url: "@Url.Content("~/Students/AssignToClass")",
+                                data: {
+                                    id: studId,
+                                    classId: classId
+                                },
+                                dataType: 'json',
+                                success: function (result) {
+                                }
+                            });
+                        }
+                    });
+
+                    $("#thisForm").submit();
+                    //$('#editClasses').removeClass('btn-danger').addClass('btn-info');
+                    //$('#spanClasses').html('Edit classes');
+                    //$('#spanLevels').html('Edit levels');
+                    //ResetOrganise(false, true);
+                }
+                else {
+                    ResetOrganise(false, true);
+                    $('#editClasses').removeClass('btn-info').addClass('btn-danger');
+                    $('#spanClasses').html('Save changes');
+                    $('#spanLevels').html('Cancel edit');
+                }
+
+            });
+        });
+
+        function ResetOrganise(editLevels, editClasses) {
+            sortOrder = $('#sortOrder').val()
+            classId = $('#classId').val()
+            asc = $('#ascending').val()
+            var id = $('#selectedId').val();
+           
+            if (classId > 0) {
+                $('#activityBtn4').addClass('disabled');
+                $('#activity').val(activity);
+                LoadOrganise(id, classId, sortOrder, asc, editLevels, editClasses);
+            }
+        }
+
+        $(function () {
+            $('#ddlOldReport').on('change', function (evt) {
+                var id = $('#selectedId').val();
+                var gradeId = $('#selectedGrade').val();
+                var schoolReportId = $('#ddlOldReport').val();
+                LoadSchoolReport(id, gradeId, schoolReportId);
+
+            });
+        });
+
+    });
+    </script>
+}

@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Home Reading Manager</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .modal-content {
+            width: 600px !important;
+            margin: 30px auto !important;
+
+        }
+
+        .modal {
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            /*margin-left: 25%;*/
+        }
+
+        .textArea {
+            max-width: 100%;
+            width: 100%;
+        }
+       .textAreaPopup {
+            max-width: 50%;
+            width: 50%;
+        }
+        .selectedId {
+            background-color:  gold;
+        }
+
+        .centeredHeader {
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            text-align: center;
+            background-color: lightyellow;
+        }
+
+        .centeredHeaderBlue {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70%;
+            text-align: center;
+            color: blue;
+        }
+
+        .textLargeBlue {
+            color: blue;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .textItalic {
+            font-style: italic;
+        }
+
+        .textRed {
+            color: red;
+            font-weight: bold;
+        }
+
+        .returned {
+            color: green;
+            font-weight: bold;
+        }
+
+        .newLoan {
+            color: navy;
+            font-weight: bold;
+        }
+
+        .days {
+            color: black;
+            font-weight: bold;
+        }
+
+        .someMargin {
+            margin: 2px 2px 2px 2px;
+        }
+        .shortTextBox{
+            width: 130px;
+        }
+        /*td.clickable span, td.clickable span a {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }*/
+    </style>
+
+
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Classroom Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("My Class", "SelectClass", "Students")</li>
+                    @*<li>@Html.ActionLink("Home Reading Library", "StudentLoans", "Loans")</li>*@
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Home Reading<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Loans & Returns", "StudentLoans", "Loans")</li>
+                            <li>@Html.ActionLink("Home Reading Reports", "Index", "Reports")</li>
+                            <li>@Html.ActionLink("Catalogue", "Index", "Products")</li>
+                            <li>@Html.ActionLink("Download Titles", "Index", "TitleSearch")</li>
+                            <li>@Html.ActionLink("Barcode Labels", "Index", "BarcodeLabels")</li>
+                            <li>@Html.ActionLink("Stocktake", "Index", "Stocktake")</li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My School<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("School Reports", "ReportForm", "Subjects")</li>
+                            <li>@Html.ActionLink("Teachers", "Index", "Teachers")</li>
+                            <li>@Html.ActionLink("Classes", "Index", "Classes")</li>
+                            <li>@Html.ActionLink("Import csv File", "Index", "CsvImport")</li>
+                        </ul>
+                    </li>
+
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                     
+                </ul>
+
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Classroom Manager</p>
+        </footer>
+    </div>
+
+    
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $('.date').datepicker({ dateFormat: "dd-mm-yyyy" });
+            });
+            $('.datepicker').datepicker();
+            //$(function () { // will trigger when the document is ready
+            //    //$('.datepicker').datepicker(); //Initialise any date pickers
+            //    $('.datepicker').datepicker({ altFormat: 'dd-MM-yyyy' });
+               
+            //    //$('.datepicker').on('select', function (dateText) {
+            //    //    alert("Here");
+            //    //    var thisDate = new Date(dateText);
+            //    //    var newFormat = $.datepicker.formatDate("dd-mm-yyyy", thisDate);
+            //    //    $(this).html(newFormat);
+            //    //});
+            //});
+
+            $(function () {
+                // Initialize numeric spinner input boxes
+                //$(".numeric-spinner").spinedit();
+
+                // Initalize modal dialog
+                // attach modal-container bootstrap attributes to links with .modal-link class.
+                // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+                $('body').on('click', '.modal-link', function (e) {
+                    e.preventDefault();
+                    $(this).attr('data-target', '#modal-container');
+                    $(this).attr('data-toggle', 'modal');
+                });
+
+                // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+                $('body').on('click', '.modal-close-btn', function () {
+                    $('#modal-container').modal('hide');
+                });
+
+                //clear modal cache, so that new content can be loaded
+                $('#modal-container').on('hidden.bs.modal', function () {
+                    
+                    $(this).removeData('bs.modal');
+                });
+
+                $('#CancelModal').on('click', function () {
+                    return false;
+                });
+
+
+                @*$(function () {
+                    $('#barcodeScan').on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        var studentId = $('#selectedId').val();
+                        var barcode = $('#barcode').val();
+
+                        if (barcode != null && barcode != "") {
+                            $.ajax({
+                                type: 'POST',
+                                url: "@Url.Content("~/Students/BarcodeScan")",
+                                data: {
+                                    studentId: studentId,
+                                    barcode: barcode
+                                },
+                                dataType: 'json',
+                                success: function (result) {
+                                    $('#barcode').val('');
+                                    if (result.Success) {
+                                        var id = (parseInt(result.Result));
+
+                                        if (id > 0) {
+                                            $('#' + id).html("RETURNED");
+                                            $('#' + id).removeClass('days').addClass('returned');
+                                            $('#dvMessages').html('');
+                                            $('#barcode').focus();
+                                        }
+                                        else if (result.Result === 0) {
+                                            LoadCurrentLoans(studentId, "");
+                                            $('#dvMessages').html('');
+                                            $('#barcode').focus();
+                                        }
+                                        else if (result.Result === -1) {
+                                            BookSearch(studentId, barcode, 1);
+                                            $('#dvMessages').html('');
+                                        }
+                                        else {
+                                            $('#dvMessages').html(result.Result);
+                                            $('#barcode').focus();
+                                        }
+                                    }
+
+
+                                }
+                            });
+                        }
+                    });
+                });*@
+
+                @*function BookSearch(studentId, search, page) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/BookSearch")",
+                        data: {
+                            studentId: parseInt(studentId),
+                            search: search,
+                            page: page
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            $('#dvLoans').empty().append(result);
+                            $('#scanArea').hide();
+                            // $("#modal-content").empty().append(result);
+                        }
+                    });
+                }*@
+
+                @*function LoadCurrentLoans(studentId, message) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/ShowCurrentLoansView")",
+                        data: {
+                            studentId: parseInt(studentId)
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            $('#dvMessages').html(message);
+                            $("#dvLoans").empty().append(result);
+                        }
+                    });
+                }*@
+
+                $(function () {
+                    $('.selectTitle').on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        var id = $(this).attr('data-Id');
+                        var studentId = $('#selectedId').val();
+                        $.ajax({
+                            type: 'POST',
+                            url: "@Url.Content("~/Students/BookSelection")",
+                            data: {
+                                studentId: studentId,
+                                productId: id
+                            },
+                            dataType: 'json',
+                            success: function (result) {
+                                $('#scanArea').show();
+                                LoadCurrentLoans(studentId, result.Result)
+                            }
+                        });
+                        //    error: function (result) {
+                        //    $('#scanArea').Show();
+                        //    LoadCurrentLoans(studentId, "There was an error process this book. Please try again.")
+                        //    }
+                        //});
+                    });
+                });
+                //$(document.body).on('hidden.bs.modal', function () {
+
+                //    $(this).removeData('bs.modal')
+                //});
+                //$(function () {
+                //    $('.closeModel').click(function () {
+                //        alert("doc closemodel");
+                //        $(this).removeData('bs.modal');
+
+                //        $('#modal-container').modal('hide');
+                //    });
+                //});
+            });
+        });
+    </script>
+</body>
+</html>

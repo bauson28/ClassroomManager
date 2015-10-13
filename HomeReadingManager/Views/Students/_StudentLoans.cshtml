@@ -1,0 +1,165 @@
+﻿@using HomeReadingManager.MyClasses
+@model IQueryable<HomeReadingManager.ViewModels.OnLoan>
+
+@{
+    ViewBag.Title = "ClassHomeReading";
+    //Layout = "~/Views/Shared/_MyPartial.cshtml";
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            ColourDisplayDate();
+
+            function ColourDisplayDate() {
+                $('.displayDate').each(function () {
+                    var text = $(this).html();
+                    text = $.trim(text);
+                    switch (text) {
+                        case 'RETURNED':
+                            $(this).addClass('returned');
+                            break;
+                        case 'NEW LOAN':
+                            $(this).addClass('newLoan');
+                            break;
+                        default:
+                            $(this).addClass('days')
+                            break;
+                    }
+                });
+            };
+
+            $(function () {
+                $('.cancelLoan').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).attr('data-Id');
+                    $('#' + id).html("CANCELLED");
+                    $('#' + id).removeClass('newLoan').addClass('textRed');
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/ReturnLoan")",
+                        data: {
+                            id: parseInt(id),
+                            isCancel: true
+                        },
+                        dataType: 'json',
+
+                        error: function () {
+                            $('#dvMessages').html('Failed to write to file. Please try again.');
+                            $('#' + id).html('NEW LOAN');
+                            $('#' + id).removeClass('textRed').addClass('newLoan');
+                        }
+                    });
+                });
+            });
+
+
+            $(function () {
+                $('.returnLoan').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).attr('data-Id');
+                    var original = $(this).html;
+                    $('#' + id).html("RETURNED");
+                    $('#' + id).removeClass('days').addClass('returned');
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Content("~/Students/ReturnLoan")",
+                        data: {
+                            id: parseInt(id),
+                            isCancel: false
+                        },
+                        dataType: 'json',
+
+                        error: function () {
+                            $('#dvMessages').html('Failed to write to file. Please try again.');
+                            $('#' + id).html(original);
+                            $('#' + id).removeClass('returned').addClass('days');
+                        }
+                    });
+                });
+            });
+
+
+        });
+    </script>
+
+}
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <table id="loansTable" class="table">
+            <tr>
+                <th></th>
+                <th width="500px">
+                    @Html.DisplayNameFor(model => model.First().Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Isbn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().ReadLevel)
+                </th>
+                <th>
+                    Status
+                    @*@Html.DisplayNameFor(model => model.First().BorrowDate)*@
+                </th>
+                <th width="130px">Return</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                if (item.ImageId > 0)
+                {
+                    string imageBase64 = Convert.ToBase64String(item.Jacket);
+                    string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                    <img src="@imageSrc" width="50" height="70" />
+                }
+                else
+                {
+                    <img src="~/Images/NoJacket1.jpg" width="50" height="70" />
+                }
+                        }
+
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(m => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Isbn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.ReadLevel)
+                    </td>
+                    <td id=@item.LoanId class="displayDate">
+                        @Html.DisplayFor(m => item.DisplayDate)
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Return", "MyClass", new { id = Model.StudentId, loanId = item.LoanId })*@
+                        @if (item.TodaysLoan)
+                        {
+
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Cancel loan", "", "Students", routeValues: new
+                           {
+                               id = item.LoanId,
+                           },
+                           htmlAttributes: new { @class = "btn btn-danger cancelLoan", @data_Id = @item.LoanId })
+                        }
+                        else
+                        {
+                            @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-refresh'></span>", "Return loan", "", "Students", routeValues: null,
+                                          htmlAttributes: new { @class = "btn btn-primary returnLoan", @data_Id = @item.LoanId })
+
+                            @*<input type="button" value="Return" class="returnLoan" />*@
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+

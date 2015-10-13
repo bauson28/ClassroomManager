@@ -1,0 +1,134 @@
+﻿@using HomeReadingManager.MyClasses;
+@using HomeReadingManager.ViewModels;
+@model HomeReadingManager.ViewModels.ClassSelection
+
+@{
+    ViewBag.Title = "SelectClass";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Select Class</h2>
+
+@using (Html.BeginForm("SelectClass", "Students", FormMethod.Get, new { id = "thisForm" }))
+{
+    @Html.HiddenFor(m => m.ClassId, new { id = "classId" })
+    @Html.HiddenFor(m => m.ClassName, new { id = "className" })
+    @Html.HiddenFor(m => m.Search, new { id = "search" })
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+            <div class="bg-info input-lg">
+                Kindergarten and pre-school
+            </div>
+            <div class="container">
+                <div>
+                    @foreach (var item in Model.ClassList.Where(m => m.Stage == "0"))
+                    {
+                        <button type="button" class="btn btn-primary btn-lg setGrade" id=@item.Id>@item.Name</button>
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="bg-info input-lg">
+                Stage 1
+            </div>
+            <div class="container">
+                <div>
+                    @foreach (var item in Model.ClassList.Where(m => m.Stage == "1"))
+                    {
+
+                        <button type="button" class="btn btn-warning btn-lg setGrade" id=@item.Id>@item.Name</button>
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="bg-info input-lg">
+                Stage 2
+            </div>
+            <div class="container">
+                <div>
+                    @foreach (var item in Model.ClassList.Where(m => m.Stage == "2"))
+                    {
+
+                        <button type="button" class="btn btn-primary btn-lg setGrade" id=@item.Id>@item.Name</button>
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="bg-info input-lg">
+                Stage 3
+            </div>
+            <div class="container">
+                <div>
+                    @foreach (var item in Model.ClassList.Where(m => m.Stage == "3"))
+                    {
+
+                        <button type="button" class="btn btn-warning btn-lg setGrade" id=@item.Id>@item.Name</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <img src="@Url.Content("~/Images/StudentsGroup.jpg")" alt="IMAGES" width="300" height="300" />
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-10">
+            <br />
+            <br />
+
+            <p>
+                Search by student's name : @Html.TextBox("SearchString", "", new { @autofocus = "autofocus", id = "textSearch" })
+                <input type="submit" value="Search" id="studentSearch" class="btn btn-info" />
+                <span id="clearSearch">
+                    @Html.ActionLink("Clear search", "StudentLoans")
+                </span>
+            </p>
+        </div>
+    </div>
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            function set(value) {
+                return value;
+            }
+
+            $(function () {
+                $('.setGrade').on('click', function () {
+                    var className = $(this).text();
+                    var id = $(this).attr('id')
+                    $('#classId').val(id);
+                    $('#className').val(className);
+                    $('#search').val("");
+                    $("#thisForm").submit();
+                });
+            });
+
+            $(function () {
+                $('#studentSearch').on('click', function (evt) {
+                    //  evt.preventDefault();
+                    // evt.stopPropagation();
+
+                    var search = $('#textSearch').val();
+                    $('#search').val(search);
+                    // $("#thisForm").submit();
+
+                });
+            });
+
+            $(function () {
+                $('#clearSearch').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    $('#textSearch').val("");
+                });
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,124 @@
+﻿@model HomeReadingManager.ViewModels.HomeReading
+
+
+@{
+    ViewBag.Title = "StudentLoans";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("StudentLoans", "Loans", FormMethod.Get, new { id = "thisForm" }))
+{
+    <div>
+        <h2>Home Reading Library</h2>
+    </div>
+    <div class="row">
+        @Html.HiddenFor(m => m.StudentId, new { id = "selectedId" })
+        @Html.HiddenFor(m => m.ClassId, new { id = "classId" })
+        @Html.HiddenFor(m => m.SortOrder, new { id = "sortOrder" })
+        @Html.HiddenFor(m => m.Ascending, new { id = "ascending" })
+        @Html.HiddenFor(m => m.LibraryId, new { id = "libraryId" })
+       
+        <div class="col-md-3" id="dvStudentList">
+
+        </div>
+
+        <div class="col-md-9">
+            <div id="dvActivity">
+
+            </div>
+        </div>
+    </div>
+}
+@section Scripts
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        function set(value) {
+            return value;
+        }
+
+        id = set(@Html.Raw(Json.Encode(Model.StudentId)));
+        if (id > 0) {
+            $('#' + id).addClass('selectedId');
+            LoadHomeReading(id);
+        }
+        else {
+            var page = set(@Html.Raw(Json.Encode(Model.Page)));
+            var classId = set(@Html.Raw(Json.Encode(Model.ClassId)));
+            var search = set(@Html.Raw(Json.Encode(Model.Search)));
+            var sortOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+            var asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+            var libraryId = set(@Html.Raw(Json.Encode(Model.LibraryId)));
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Loans/StudentLoans")",
+                data: {
+                    classId: classId,
+                    search: search,
+                    sortOrder: sortOrder,
+                    asc: asc,
+                    libraryId: libraryId,
+                    page: page
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvStudentList").empty().append(result);
+                }
+            });
+            LoadPleaseSelect();
+        }
+
+
+        function LoadHomeReading(id) {
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Loans/HomeReading")",
+                data: {
+                    studentId: parseInt(id),
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvActivity").empty().append(result);
+                }
+            });
+        }
+
+        function LoadPleaseSelect() {
+            libraryId = $('#libraryId').val();
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Loans/PleaseSelect")",
+                data: {
+                    libraryId: libraryId
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvActivity").empty().append(result);
+
+                }
+            });
+        }
+
+        $(function () {
+            $('.selectStudent').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).data('id')
+
+                var gradeId = $(this).attr('id')
+                $("#selectedId").val(id);
+                $(".selectedId").removeClass('selectedId');
+                $('#' + id).addClass('selectedId');
+                LoadHomeReading(id);
+
+            });
+        });
+
+    });
+</script>
+}
+
+
+
+

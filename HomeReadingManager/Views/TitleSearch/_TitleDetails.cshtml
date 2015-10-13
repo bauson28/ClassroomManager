@@ -1,0 +1,146 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.ProductList
+
+
+<hr />
+<h2>
+    @Html.DisplayFor(model => model.Title)
+</h2>
+<dl class="dl-horizontal">
+    
+    <dt>
+        @Html.DisplayNameFor(model => model.Isbn)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Isbn)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Levels_Id)
+    </dt>
+
+    <dd>
+        @*@Html.DropDownList("Levels_Id", null, htmlAttributes: new { @class = "form-control", @data_Id = Model.Product_Id, @id = "ddlLevel" })*@
+        @Html.DropDownListFor(model => model.Levels_Id, new SelectList(Model.Levels, "Id", "ReadLevel", Model.Levels_Id), "Not set", htmlAttributes: new { @class = "form-control", @data_Id = Model.Product_Id, @id = "ddlLevel" })
+        @Html.ValidationMessageFor(model => model.Levels_Id, "", new { @class = "text-danger" })
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Onhand)
+    </dt>
+
+    <dd >
+        <span id="stock">
+            @Html.DisplayFor(model => model.Onhand)
+        </span>
+        @*<button id="IncStock" title="ad action">Add</button>*@
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Increment stock", "", "TitleSearch", routeValues: null,
+                                                                               htmlAttributes: new { @class = "btn btn-success someMargin", @data_Id = Model.Product_Id, @id = "incStock" })
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Decrement stock", "", "TitleSearch", routeValues: null,
+                                                                               htmlAttributes: new { @class = "btn btn-danger someMargin", @data_Id = Model.Product_Id, @id = "decStock" })
+</dd>
+   
+    <dt>
+        @Html.DisplayNameFor(model => model.Labels)
+    </dt>
+
+    <dd>
+        <span id="labels">
+            @Html.DisplayFor(model => model.Labels)
+        </span>
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-up'></span>", "Increment labels", "", "TitleSearch", routeValues: null,
+                                                                             htmlAttributes: new { @class = "btn btn-success someMargin", @data_Id = Model.Product_Id, @id = "incLabels" })
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Decrement labels", "", "TitleSearch", routeValues: null,
+                                                                             htmlAttributes: new { @class = "btn btn-danger someMargin", @data_Id = Model.Product_Id, @id = "decLabels" })
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Authors)
+    </dt>
+    <dd>
+        @{
+            if (Model.Authors.Count > 0)
+            {
+                <table class="table">
+                    <tr>
+                        <th>Author</th>
+                        <th>Role</th>
+                    </tr>
+
+                    @foreach (var item in Model.Authors)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Author)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <text>Not listed</text>
+            }
+        }
+    </dd>
+    <dt>
+
+    </dt>
+
+    <dd>
+        @{
+            if (Model.Image_Id > 0)
+            {
+                string imageBase64 = Convert.ToBase64String(Model.Jacket);
+                string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                <img src="@imageSrc" width="100" height="140" />
+            }
+            else
+            {
+                 <img src="~/Images/NoJacket1.jpg" width="100" height="140" />
+            }
+        }
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Description)
+    </dt>
+
+    <dd>
+        @{
+            if (String.IsNullOrEmpty(Model.Description))
+            {
+                <text>Not listed</text>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.Description)
+            }
+        }
+    </dd>
+    <dt>
+
+    </dt>
+
+    <dd>
+        @if (Model.Inactive == true)
+        { <text>Inactive&nbsp;</text>
+        }
+       
+    </dd>
+
+   
+    <dt>
+
+    </dt>
+
+    <dd>
+        <i> @Html.DisplayNameFor(model => model.Product_Id) : @Html.DisplayFor(model => model.Product_Id) &nbsp; @Html.DisplayNameFor(model => model.Entered) : @Html.DisplayFor(model => model.Entered)</i>
+    </dd>
+
+</dl>
+
+

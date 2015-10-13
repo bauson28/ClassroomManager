@@ -1,0 +1,237 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.Stocktake
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Index", "Stocktake", FormMethod.Get, new { id = "thisForm" }))
+{
+    <hr />
+    @*@Html.HiddenFor(model => model.Action, new { @id = "action" })*@
+    @Html.HiddenFor(model => model.SessionName, new { @id = "sessionName" })
+    @Html.HiddenFor(model => model.LibraryId, new { @id = "libraryId" })
+    @Html.HiddenFor(model => model.UserId, new { @id = "userId" })
+    <div class="row">
+        <div class="col-md-3">
+            <div>
+                <h4>
+                    @Html.DisplayFor(model => model.LastStocktake)
+                </h4>
+                <h4>
+                    @Html.DisplayFor(model => model.ShowDate)
+                </h4>
+                <div id="noPrevious">
+                    <h4>Select report</h4>
+                    <p>
+                        @Html.RadioButton("ReportType", 1, false, new { onchange = "this.form.submit();" }) Excess stock
+                    </p>
+                    <p>
+                        @Html.RadioButton("ReportType", 2, false, new { onchange = "this.form.submit();" }) Missing/uncounted stock
+                    </p>
+                    <p>
+                        @Html.RadioButton("ReportType", 3, false, new { onchange = "this.form.submit();" }) Stocktake list
+                    </p>
+                </div>
+                <p>
+                    @Html.RadioButton("ReportType", 4, false, new { onchange = "this.form.submit();" }) Stock list
+                </p>
+            </div>
+            <div>
+                <p>
+                    <img src="@Url.Content("~/Images/TeacherOwl.jpg")" alt="IMAGES" width="250" height="250" />
+                </p>
+            </div>
+            <p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+            <div id="noStocktake">
+                <h4>
+                    Start new stocktake
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Start new stocktake", "StartStocktake", "Stocktake",
+                         routeValues: new {libraryId = Model.LibraryId, userId = Model.UserId}, htmlAttributes: new { @class = "btn btn-warning", id = "startStocktake" })
+                </h4>
+            </div>
+            <div class="hasSession">
+                <p>
+                    <h4>Select counting session:</h4>
+                </p>
+                <p>
+                    @Html.DropDownList("SessionId", null, htmlAttributes: new { @class = "form-control" })
+                </p>
+            </div>
+            <div id="hasStocktake">
+                <p>
+                    <h4>
+                        New counting session:
+                        @*@Html.ActionLink("Start new counting session", "NewSession")*@
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Start new counting session", "Index", "Stocktake",
+                            routeValues: new { userAction = "N" }, htmlAttributes: new { @class = "btn btn-primary", id = "newSession" })
+                    </h4>
+                </p>
+            </div>
+            <div class="hasSession">
+                <p>
+                    <h4>
+                        Process stocktake:
+                        @*@Html.ActionLink("Stocktake reports & processing", "ProcessStocktake")*@
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-save'></span>", "Stocktake Processing", "Index", "Stocktake",
+                                routeValues: new { userAction = "P" }, htmlAttributes: new { @class = "btn btn-success", id = "process" })
+                    </h4>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div id="dvReports">
+                @{int reportType = Model.ReportType;}
+                <h2>@Html.DisplayFor(model => model.ReportName)</h2>
+                @switch (reportType)
+                {
+                    case 1:
+                        @Html.ActionLink("Print report", "PrintReport", new { reportType = 1, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                        @Html.Action("ShowReport", "Stocktake", new { reportType = 1, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId })
+                        break;
+
+                    case 2:
+                    @Html.ActionLink("Print report", "PrintReport", new { reportType = 2, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                    @Html.Action("ShowReport", "Stocktake", new { reportType = 2, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId })
+                        break;
+
+                    case 3:
+                    @Html.ActionLink("Print report", "PrintReport", new { reportType = 3, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                    @Html.Action("ShowReport", "Stocktake", new { reportType = 3, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId })
+                        break;
+
+                    case 4:
+                    @Html.ActionLink("Print report", "PrintReport", new { reportType = 4, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                    @Html.Action("ShowReport", "Stocktake", new { reportType = 4, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId })
+                        break;
+                }
+               
+            </div>
+
+            <div id="dvCounting" hidden="hidden">
+                <p>
+                    <h2>Counting session:&nbsp;@Html.DisplayFor(model => model.SessionName)</h2>
+                </p>
+                <div>
+                    @Html.Action("CountingList", "Stocktake", new { page = Model.Page, libraryId = Model.LibraryId, userId = Model.UserId })
+                </div>
+            </div>
+
+            <div id="dvTitleSearch" hidden="hidden">
+                @Html.Action("TitleSearch", "Stocktake", new { sessionName = Model.SessionName, sessionId = Model.Session_Id, search = Model.TitleSearch, page = Model.Page });
+            </div>
+
+            <div id="dvNewSession" hidden="hidden">
+                @Html.Action("NewSession", "Stocktake", new { model = Model })
+            </div>
+
+            <div id="dvProcess" hidden="hidden">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="@Url.Content("~/Images/StudentBoy.jpg")" alt="IMAGES" width="150" height="231" />
+                    </div>
+                    <div class="col-md-3">
+                        <p>
+                            Finalise the stocktake&nbsp;  @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-floppy-save'></span>", "Finalise the stocktake", "FinaliseStocktake", "Stocktake",
+                                routeValues: null, htmlAttributes: new { @class = "btn btn-warning", id = "finalise" })
+
+                        </p>
+                        <p>
+                            Scrap the stocktake&nbsp; @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Scrap the stocktake", "ScrapStocktake", "Stocktake",
+                                routeValues: null, htmlAttributes: new { @class = "btn btn-danger", id = "finalise" })
+
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <img src="@Url.Content("~/Images/StudentGirl.jpg")" alt="IMAGES" width="150" height="231" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            function set(value) {
+                return value;
+            }
+
+            reportType = set(@Html.Raw(Json.Encode(Model.ReportType)));
+            if (reportType == 0) {
+                $("#dvReports").hide();
+            }
+
+            noStocktake = set(@Html.Raw(Json.Encode(Model.Flag)));
+            if (!noStocktake) {
+                $("#hasStocktake").hide();
+                $(".hasSession").hide();
+            }
+            else {
+                $("#noStocktake").hide();
+
+                hasPrevious = set(@Html.Raw(Json.Encode(Model.HasPrevious)));
+                if (hasPrevious == null) {
+                    $("#noPrevious").hide();
+                }
+
+                hasSessions = set(@Html.Raw(Json.Encode(Model.HasSessions)));
+                if (!hasSessions) {
+                    $("#pickSession").hide();
+                }
+                action = set(@Html.Raw(Json.Encode(Model.UserAction)));
+                if (action == "N") {
+                    $("#dvNewSession").show();
+                }
+                else if (action == "P") {
+                    $("#dvProcess").show();
+                }
+                else if (action == "C") {
+                    $("#dvCounting").show();
+                }
+                else if (action == "T") {
+                    search = set(@Html.Raw(Json.Encode(Model.TitleSearch)));
+                    if (search) {
+                        $("#dvTitleSearch").show();
+                    }
+                }
+            }
+            $(function () {
+                $("#SessionId").change(function () {
+                    var temp = $("#SessionId option:selected").text();
+                    $('#sessionName').val(temp);
+                    $('input[name=ReportType]').val(['']);
+                    $("#thisForm").submit();
+                });
+            });
+
+            // alert(set(@Html.Raw(Json.Encode(Model.ReportType))));
+            //alert(set(@Html.Raw(Json.Encode(ViewBag.SortColumn))));
+            @*$(function () {
+                $("#startStocktake").click(function () {
+                    //alert('got here');
+                    //$("action").val('N');
+                    //temp = $("action").val();
+                    //alert('temp ' + temp);
+                    // $("#myPartialViewContainer").load('@Url.Action("Skits","KitSection")' + '?id=' + id + '&status=' + status) //baf *****
+                });
+            });*@
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

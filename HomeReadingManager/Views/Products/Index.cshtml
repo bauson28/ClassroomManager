@@ -1,0 +1,127 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.TitlesModel
+@using PagedList.Mvc;
+
+@*@using PagedList;*@
+@{
+    ViewBag.Title = "Product catalogue";
+}
+
+<h2>Home Reading Book Catalogue</h2>
+
+<p>
+    @*@Html.ActionLink("Add new title", "Create")*@
+    <div class="pull-right">
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add new title", "Create", "Products", routeValues: new
+                                                                                                       {
+                                                                                                           searchString = Model.SearchString,
+                                                                                                           sortOrder = Model.SortOrder,
+                                                                                                           asc = Model.Ascending,
+                                                                                                           page = Model.Page,
+                                                                                                           libraryId = Model.LibraryId
+                                                                                                       }, htmlAttributes: new { @class = "btn btn-primary" })
+    </div>
+</p>
+@using (Html.BeginForm("Index", "Products", FormMethod.Get))
+{
+    @Html.HiddenFor(m=>Model.LibraryId)
+    <p>
+        Scan barcode or search by title: @Html.TextBox("SearchString", ViewBag.SearchString as string, new { @autofocus = "autofocus" })
+        <input type="submit" value="Search" />
+        @Html.ActionLink("Clear search", "Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = 1, libraryId = Model.LibraryId })
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+             @Html.ActionLink("First Name", "Index", new { newOrder = "Title", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId })
+        </th>
+        <th>
+            Author
+        </th>
+        <th>
+            @Html.ActionLink("ISBN", "Index", new { newOrder = "Isbn", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId })
+        </th>
+        <th>
+            @Html.ActionLink("Read Level", "Index", new { newOrder = "ReadLevel", sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId })
+        </th>
+         <th></th>
+    </tr>
+
+    @foreach (var item in Model.TitlesList)
+    {
+        <tr>
+            <td>
+                @{
+                    if (item.Image_Id > 0)
+                    {
+                        string imageBase64 = Convert.ToBase64String(item.Jacket);
+                        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        <img src="@imageSrc" width="40" height="50" />
+                    }
+                    else
+                    {
+                        <img src="~/Images/NoJacket1.jpg" width="40" height="50" />
+                    }
+                            }
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MainAuthor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Isbn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReadLevel)
+            </td>
+            <td>
+                <div class="pull-right">
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "Products", routeValues: new
+                            {
+                                id = item.Product_Id,
+                                lsearchString = Model.SearchString,
+                                sortOrder = Model.SortOrder,
+                                asc = Model.Ascending,
+                                page = Model.Page,
+                                libraryId = Model.LibraryId
+                            },
+                            htmlAttributes: new { data_modal = "", @class = "btn btn-info" })
+                    &nbsp;
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-search'></span>", "Details", "Details", "Products", routeValues: new
+                           {
+                               id = item.Product_Id,
+                               searchString = Model.SearchString,
+                               sortOrder = Model.SortOrder,
+                               asc = Model.Ascending,
+                               page = Model.Page,
+                               libraryId = Model.LibraryId
+                           },
+                           htmlAttributes: new { data_modal = "", @class = "btn btn-primary" })
+                    @if (Model.ShowDelete)
+                    { 
+                        <text>&nbsp;</text>
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "Products", routeValues: new
+                               {
+                                   id = item.Product_Id,
+                                   searchString = Model.SearchString,
+                                   sortOrder = Model.SortOrder,
+                                   asc = Model.Ascending,
+                                   page = Model.Page,
+                                   libraryId = Model.LibraryId
+                               },
+                               htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.PagedListPager(Model.TitlesList, page => Url.Action("Index", new { page = page, searchString = Model.SearchString, sortOrder = Model.SortOrder, asc = Model.Ascending, libraryId = Model.LibraryId }))
+

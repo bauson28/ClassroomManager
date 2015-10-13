@@ -1,0 +1,85 @@
+﻿@using HomeReadingManager.MyClasses
+@model IEnumerable<HomeReadingManager.Models.Product>
+@using PagedList.Mvc;
+@using PagedList;
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Select Title</h4>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ProdAuthors)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Levels_Id)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in ViewBag.ProductList)
+            {
+                <tr>
+                    <td>
+                        @{
+                if (item.Image_Id > 0)
+                {
+                    string imageBase64 = Convert.ToBase64String(item.Jacket);
+                    string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                    <img src="@imageSrc" width="50" height="70" />
+                }
+                else
+                {
+                    <img src="~/Images/NoJacket1.jpg" width="50" height="70" />
+                }
+                        }
+                    </td>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.MainAuthor
+                    </td>
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @Html.ActionLink("Select", "Index", new { sessionName = ViewBag.SessionName, sessionId = ViewBag.SessionId, productId = item.Product_Id, returnsView = false, onclick = "javascript:SelectTitle();" })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)ViewBag.ProductList, page => Url.Action("Index", new { sessionName = ViewBag.SessionName, sessionId = ViewBag.SessionId, returnsView = false, page = page, searchString = ViewBag.SearchString }))
+        
+    </div>
+    <div class="modal-footer">
+     
+        @Html.ActionLink("Clear search", "Index", new { sessionName = ViewBag.SessionName, sessionId = ViewBag.SessionId, returnsView = false }, new { @class = "btn btn-default" });
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

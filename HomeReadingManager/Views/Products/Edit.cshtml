@@ -1,0 +1,140 @@
+﻿@model HomeReadingManager.ViewModels.ProductList
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit Title</h2>
+
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@Html.DisplayFor(model => model.Title)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Product_Id)
+        @Html.HiddenFor(model => model.Annotation_Id)
+        @Html.HiddenFor(model => model.Jacket)
+        @Html.HiddenFor(model => model.LibraryId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Isbn, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Isbn, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Isbn, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Levels_Id, "Reading level", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.DropDownList("Levels_Id", null, htmlAttributes: new { @class = "form-control" })*@
+                @Html.DropDownListFor(model => model.Levels_Id, new SelectList(Model.Levels, "Id", "ReadLevel", Model.Levels_Id), "Not set")
+                @Html.ValidationMessageFor(model => model.Levels_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-10" id="replacetarget">
+                @{ Html.RenderAction("Index", "ProdAuthors", new { id = Model.Product_Id, title = Model.Title }); }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Onhand, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Onhand, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.ValidationMessageFor(model => model.Isbn, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.Jacket, "Jacket", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @{
+    if (Model.Image_Id > 0)
+    {
+        string imageBase64 = Convert.ToBase64String(Model.Jacket);
+        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+        <img src="@imageSrc" width="100" height="100" />
+    }
+    else
+    {
+        <text><i> No jacket image</i></text>
+    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @if (Model.Image_Id > 0)
+            {
+                @Html.LabelFor(model => model.Jacket, "Change jacket image", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+            else
+            {
+                @Html.LabelFor(model => model.Jacket, "Add jacket image", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+
+            <div class="col-md-10">
+                <input type="file" name="jacket" id="jacket" accept="image/*;capture=camera">
+                @* @Html.ValidationMessageFor(x => x.Jacket)*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div>
+                    @Html.TextAreaFor(model => model.Description, 5, 1, new { @class = "textArea" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Inactive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Inactive)
+                    @Html.ValidationMessageFor(model => model.Inactive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save changes" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+
+
+}
+
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to list", "Index", new { searchString = Model.SearchString, sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId })
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modalform")
+}

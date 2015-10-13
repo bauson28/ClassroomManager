@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2b59f39f0d77495d9c75cfd65856ce3b" Name="Diagram1">
+        <EntityTypeShape EntityType="HomeReadingModel.Annotation" Width="1.5" PointX="11.25" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.CardAddress" Width="1.5" PointX="9" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ContactTitle" Width="1.5" PointX="0.75" PointY="32.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Country" Width="1.5" PointX="6.75" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.CsvList" Width="1.5" PointX="3" PointY="27.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ImportData" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ImportMap" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Level" Width="1.5" PointX="6.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.LibImage" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Library" Width="1.5" PointX="0.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Loan" Width="1.5" PointX="16.5" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.OnixAuthorRole" Width="1.5" PointX="12" PointY="33" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Parent" Width="1.5" PointX="6" PointY="24.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ProdAuthor" Width="1.5" PointX="14.25" PointY="25.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ProdAvailability" Width="1.5" PointX="6.75" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ProdImage" Width="1.5" PointX="11.25" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.ProdStock" Width="1.5" PointX="6" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.Relationship" Width="1.5" PointX="14.25" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.STCount" Width="1.5" PointX="11.25" PointY="38.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.StSession" Width="1.5" PointX="3" PointY="53.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.StudentContact" Width="1.5" PointX="16.5" PointY="18.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="HomeReadingModel.SystemVar" Width="1.5" PointX="7.75" PointY="7.75" IsExpanded="true" />
+        <AssociationConnector Association="HomeReadingModel.FK_CardAddress_Countries" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_Parents_CardAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_Parents_ContactTitles" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_CsvLists_Libraries" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_Parents_Libraries" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_ProdStocks_Libraries" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_StSessions_Libraries" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_ProdAuthors_OnixAuthorRole" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_StudentContacts_Parents" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_StudentContacts_Relationships" ManuallyRouted="false" />
+        <AssociationConnector Association="HomeReadingModel.FK_STCounts_StSessions" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="HomeReadingModel.Assessment" Width="1.5" PointX="12" PointY="12.25" />
+        <EntityTypeShape EntityType="HomeReadingModel.Mark" Width="1.5" PointX="14.25" PointY="12.125" />
+        <EntityTypeShape EntityType="HomeReadingModel.Semester" Width="1.5" PointX="14.25" PointY="22.25" />
+        <AssociationConnector Association="HomeReadingModel.FK_Marks_Assessments" />
+        <EntityTypeShape EntityType="HomeReadingModel.Grade" Width="1.5" PointX="10.375" PointY="0.875" />
+        <EntityTypeShape EntityType="HomeReadingModel.Result" Width="1.5" PointX="21.75" PointY="16.125" />
+        <AssociationConnector Association="HomeReadingModel.FK_Results_Marks" />
+        <AssociationConnector Association="HomeReadingModel.FK_Results_Marks1" />
+        <EntityTypeShape EntityType="HomeReadingModel.GradeReport" Width="1.5" PointX="18.75" PointY="14.125" />
+        <AssociationConnector Association="HomeReadingModel.FK_GradeReport_Grades" />
+        <EntityTypeShape EntityType="HomeReadingModel.ReportStudent" Width="1.5" PointX="18.75" PointY="24.625" />
+        <AssociationConnector Association="HomeReadingModel.FK_Results_ReportStudents" />
+        <EntityTypeShape EntityType="HomeReadingModel.Class" Width="1.5" PointX="14.25" PointY="28.875" />
+        <AssociationConnector Association="HomeReadingModel.FK_Classes_Libraries" />
+        <EntityTypeShape EntityType="HomeReadingModel.PrintLabel" Width="1.5" PointX="14.25" PointY="33.75" />
+        <EntityTypeShape EntityType="HomeReadingModel.Product" Width="1.5" PointX="9" PointY="23.75" />
+        <EntityTypeShape EntityType="HomeReadingModel.Teacher" Width="1.5" PointX="3" PointY="31.375" />
+        <EntityTypeShape EntityType="HomeReadingModel.UserSetting" Width="1.5" PointX="5.25" PointY="39" />
+        <AssociationConnector Association="HomeReadingModel.FK_Annotations_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_Classes_Teachers" />
+        <AssociationConnector Association="HomeReadingModel.FK_Classes_Teachers1" />
+        <AssociationConnector Association="HomeReadingModel.FK_Teachers_ContactTitles" />
+        <AssociationConnector Association="HomeReadingModel.FK_Products_Levels" />
+        <AssociationConnector Association="HomeReadingModel.FK_PrintLabels_Libraries" />
+        <AssociationConnector Association="HomeReadingModel.FK_Products_Libraries" />
+        <AssociationConnector Association="HomeReadingModel.FK_Teachers_Libraries" />
+        <AssociationConnector Association="HomeReadingModel.FK_Loans_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_PrintLabels_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_PrintLabels_Teachers" />
+        <AssociationConnector Association="HomeReadingModel.FK_ProdAuthors_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_Products_ProdAvailability" />
+        <AssociationConnector Association="HomeReadingModel.FK_ProdImages_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_ProdStocks_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_STCounts_Products" />
+        <AssociationConnector Association="HomeReadingModel.FK_ReportStudents_Teachers" />
+        <AssociationConnector Association="HomeReadingModel.FK_UserSettings_Teachers" />
+        <EntityTypeShape EntityType="HomeReadingModel.ImportFile" Width="1.5" PointX="5.25" PointY="43.375" />
+        <AssociationConnector Association="HomeReadingModel.FK_ImportData_ImportFiles" />
+        <AssociationConnector Association="HomeReadingModel.FK_ImportFiles_Teachers" />
+        <AssociationConnector Association="HomeReadingModel.FK_ImportMaps_ImportFiles" />
+        <EntityTypeShape EntityType="HomeReadingModel.Student" Width="1.5" PointX="16.5" PointY="11.875" />
+        <AssociationConnector Association="HomeReadingModel.FK_Students_CardAddress" />
+        <AssociationConnector Association="HomeReadingModel.FK_Students_Classes" />
+        <AssociationConnector Association="HomeReadingModel.FK_Students_Grades" />
+        <AssociationConnector Association="HomeReadingModel.FK_Students_Levels" />
+        <AssociationConnector Association="HomeReadingModel.FK_Students_Libraries" />
+        <AssociationConnector Association="HomeReadingModel.FK_Loans_Students" />
+        <AssociationConnector Association="HomeReadingModel.FK_ReportStudents_Students" />
+        <AssociationConnector Association="HomeReadingModel.FK_StudentContacts_Students" />
+        <EntityTypeShape EntityType="HomeReadingModel.DefaultKla" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="HomeReadingModel.BooksRead" Width="1.5" PointX="18.75" PointY="10.75" />
+        <AssociationConnector Association="HomeReadingModel.FK_BooksRead_Students" />
+        <EntityTypeShape EntityType="HomeReadingModel.C__MigrationHistory" Width="1.5" PointX="3.375" PointY="10.75" />
+        <EntityTypeShape EntityType="HomeReadingModel.AspNetRole" Width="1.5" PointX="10.375" PointY="6.5" />
+        <EntityTypeShape EntityType="HomeReadingModel.AspNetUserClaim" Width="1.5" PointX="14.875" PointY="5" />
+        <EntityTypeShape EntityType="HomeReadingModel.AspNetUserLogin" Width="1.5" PointX="14.875" PointY="7.75" />
+        <EntityTypeShape EntityType="HomeReadingModel.AspNetUser" Width="1.5" PointX="12.625" PointY="5.125" />
+        <AssociationConnector Association="HomeReadingModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="HomeReadingModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="HomeReadingModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="HomeReadingModel.Subject" Width="1.5" PointX="21" PointY="10.375" />
+        <AssociationConnector Association="HomeReadingModel.FK_Subjects_Assessments" />
+        <AssociationConnector Association="HomeReadingModel.FK_Subjects_Assessments1" />
+        <AssociationConnector Association="HomeReadingModel.FK_Subjects_GradeReports" />
+        <AssociationConnector Association="HomeReadingModel.FK_Results_Subjects" />
+        <AssociationConnector Association="HomeReadingModel.FK_Subjects_Subjects" />
+        <EntityTypeShape EntityType="HomeReadingModel.ReportSchool" Width="1.5" PointX="16.5" PointY="26" />
+        <AssociationConnector Association="HomeReadingModel.FK_GradeReports_ReportSchools" />
+        <AssociationConnector Association="HomeReadingModel.FK_ReportSchools_Libraries" />
+        <AssociationConnector Association="HomeReadingModel.FK_ReportSchools_Semesters" />
+        <AssociationConnector Association="HomeReadingModel.FK_ReportStudents_ReportSchools" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

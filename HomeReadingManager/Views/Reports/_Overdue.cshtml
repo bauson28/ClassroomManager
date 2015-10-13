@@ -1,0 +1,113 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.OverdueModel
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.OverdueList.FirstOrDefault().Title)
+                </th>
+                <th>
+                    @Html.ActionLink("First Name", "Index", new
+                                                                {
+                                                                    reportType = 1,
+                                                                    newOrder = "FirstName",
+                                                                    sortOrder = Model.SortOrder,
+                                                                    asc = Model.Ascending,
+                                                                    page = Model.Page,
+                                                                    days = Model.Days,
+                                                                    libraryId = Model.LibraryId,
+                                                                    school = Model.School
+                                                                })
+                </th>
+                <th>
+                    @Html.ActionLink("Last Name", "Index", new
+                                                               {
+                                                                   reportType = 1,
+                                                                   newOrder = "LastName",
+                                                                   sortOrder = Model.SortOrder,
+                                                                   asc = Model.Ascending,
+                                                                   page = Model.Page,
+                                                                   days = Model.Days,
+                                                                   libraryId = Model.LibraryId,
+                                                                   school = Model.School
+                                                               })
+                </th>
+                <th>
+                    @Html.ActionLink("Class", "Index", new
+                                                               {
+                                                                   reportType = 1,
+                                                                   newOrder = "ClassName",
+                                                                   sortOrder = Model.SortOrder,
+                                                                   asc = Model.Ascending,
+                                                                   page = Model.Page,
+                                                                   days = Model.Days,
+                                                                   libraryId = Model.LibraryId,
+                                                                   school = Model.School
+                                                               })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OverdueList.FirstOrDefault().BorrowDate)
+                </th>
+                <th>
+                    @Html.ActionLink("Days", "Index", new
+                                                               {
+                                                                   reportType = 1,
+                                                                   newOrder = "Days",
+                                                                   sortOrder = Model.SortOrder,
+                                                                   asc = Model.Ascending,
+                                                                   page = Model.Page,
+                                                                   days = Model.Days,
+                                                                   libraryId = Model.LibraryId,
+                                                                   school = Model.School
+                                                               })
+                </th>
+             </tr>
+
+            @foreach (var item in Model.OverdueList)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.FirstName
+                    </td>
+                    <td>
+                        @item.LastName
+                    </td>
+                    <td>
+                        @item.ClassName
+                    </td>
+                    <td>
+                        @item.BorrowDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.Days
+                    </td>
+                 </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)Model.OverdueList, page => Url.Action("Index", new { reportType = 1, 
+                                                                                                sortOrder = Model.SortOrder, 
+                                                                                                page = page, 
+                                                                                                days = Model.Days, 
+                                                                                                libraryId = Model.LibraryId,
+                                                                                                school = Model.School}))
+        
+    </div>
+
+</body>
+</html>

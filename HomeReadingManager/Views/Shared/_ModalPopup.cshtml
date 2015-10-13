@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Home Reading Manager</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .modal-content {
+            width: 300px !important;
+            margin: 30px auto !important;
+            /*border: 10px solid;*/
+        }
+        .modal {
+            /*width: 40%;
+            margin-left: 30%;
+            margin-top: 5%;*/
+            width: 40%;
+             margin-left: auto;
+            margin-right: auto;
+          
+            margin-top: 15%
+        }
+        .btnMedium{
+            width: 120px;
+        }
+                
+    </style>
+
+
+
+</head>
+<body>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        @*<footer>
+            <p>&copy; @DateTime.Now.Year - Home Reading Manager</p>
+        </footer>*@
+    </div>
+
+   
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+    
+    //function GetChar(event) {
+    //    var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+    //    if (chCode == 27)
+    //    {
+    //        $(this).removeData('bs.modal');
+    //        $('#modal-container').modal('hide');
+    //    }
+    //   //alert("The Unicode character code is: " + chCode);
+    //}
+
+    $(function () {
+        $('.closeModel').click(function () {
+            $(this).removeData('bs.modal');
+           
+            $('#modal-container').modal('hide');
+        });
+    });
+
+    $(function () {
+        $('.focus :input').focus();
+    });
+
+
+    $(function () {
+        $('.hideShow').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+           
+            var id = $(this).attr('data-Id');
+            if ($(this).text() == "Show details") {
+                $('#' + id).show();
+                $(this).text("Hide details");
+            }
+            else {
+                $('#' + id).hide();
+                $(this).text("Show details");
+            }
+        });
+    });
+</script>
+
+
+

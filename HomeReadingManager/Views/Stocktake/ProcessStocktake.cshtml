@@ -1,0 +1,96 @@
+﻿@model HomeReadingManager.ViewModels.StockReportData
+
+@{
+    ViewBag.Title = "ProcessStocktake";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ProcessStocktake", "Stocktake", FormMethod.Post, new { id = "thisForm" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+          
+            <h2>Select report</h2>
+            <p>
+                @Html.RadioButton("ReportType", 1, true, new { onchange = "this.form.submit();" }) Excess stock
+            </p>
+            <p>
+                @Html.RadioButton("ReportType", 2, false, new { onchange = "this.form.submit();" }) Missing/uncounted stock
+            </p>  
+            <p>
+                @Html.RadioButton("ReportType", 3, false, new { onchange = "this.form.submit();" }) Stocktake list
+            </p>
+            <p>
+                @Html.RadioButton("ReportType", 4, false, new { onchange = "this.form.submit();" }) Stock list
+            </p>
+            <p>
+                @Html.ActionLink("Finalise stocktake", "FinaliseStocktake" )
+            </p>
+            <p>
+                @Html.ActionLink("Scrap stocktake", "ScrapStocktake")
+            </p>
+            <p>
+                <img src="@Url.Content("~/Images/TeacherOwl.jpg")" alt="IMAGES" width="200" height="200" />
+            </p>
+            <p>
+                @Html.ActionLink("Back to counting page", "Index")
+            </p>
+        </div>
+              
+        <div class="col-md-9" id="reportsDiv">
+            @{int reportType = Model.ReportType;}
+            <h2>@Html.DisplayFor(model=> model.ReportName)</h2>
+            <div id="dvContainer">
+                @switch (reportType)
+                {
+                    default:
+                        @Html.ActionLink("Print report", "PrintReport", new { reportType = 1, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                        @Html.Action("ShowReport", "Stocktake", new { reportType = 1, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId });
+                        break;
+
+                    case 2:
+                         @Html.ActionLink("Print report", "PrintReport", new { reportType = 2, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                         @Html.Action("ShowReport", "Stocktake", new { reportType = 2, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId });
+                         break;
+                         
+                    case 3:
+                        @Html.ActionLink("Print report", "PrintReport", new { reportType = 3, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                        @Html.Action("ShowReport", "Stocktake", new { reportType = 3, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId });
+                        break;
+
+                    case 4:
+                        @Html.ActionLink("Print report", "PrintReport", new { reportType = 4, reportTitle = Model.ReportName, sortOrder = ViewBag.LastOrder, libraryId = Model.LibraryId }, new { target = "_blank" })
+                        @Html.Action("ShowReport", "Stocktake", new { reportType = 4, sortOrder = ViewBag.SortOrder, lastOrder = ViewBag.LastOrder, page = ViewBag.Page, libraryId = Model.LibraryId });
+                        break;
+                }
+               
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+   <script type="text/javascript">
+        $(document).ready(function () {
+            
+          
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

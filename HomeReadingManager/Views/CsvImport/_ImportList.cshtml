@@ -1,0 +1,202 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.ModelMix
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+    <div>
+        <table class="table">
+
+            <tr>
+                @for (int i = 0; i < Model.NoOfCols; i++)
+                {
+                    <th>
+                        @Html.ActionLink(Model.MappingColumns.ElementAt(i).MappedCol, "Index", new
+                                                    {
+                                                        newOrder = "Col" + i.ToString(),
+                                                        sortOrder = Model.SortOrder,
+                                                        asc = Model.Ascending,
+                                                        page = Model.Page,
+                                                        libraryId = Model.LibraryId,
+                                                        userId = Model.UserId
+                                                    }, new { @id = "Col" + i.ToString() })
+                    </th>
+                }
+                <th>
+                    @Html.ActionLink("Valid", "Index", new
+                                                    {
+                                                        newOrder = "Valid",
+                                                        sortOrder = Model.SortOrder,
+                                                        asc = Model.Ascending,
+                                                        page = Model.Page,
+                                                        libraryId = Model.LibraryId,
+                                                        userId = Model.UserId
+                                                    })
+            </th>
+            <th width="30px">Delete</th>
+        </tr>
+
+        <tr>
+            @for (int i = 0; i < Model.NoOfCols; i++)
+            {
+                <th>
+                    @Html.DropDownList("MappingList", new SelectList(Model.MappingList, "Key", "Value"), "Change...", htmlAttributes: new { @class = "ddl", @data_Id = Model.MappingColumns.ElementAt(i).ImportMap_Id, @id = i.ToString() })
+                </th>
+            }
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ImportList)
+        {
+            <tr>
+                <td id="col1">
+                    @item.Col1
+                </td>
+                @if (Model.NoOfCols > 1)
+                {
+                    <td id="col2">
+                        @item.Col2
+                    </td>
+                }
+                @if (Model.NoOfCols > 2)
+                {
+                    <td id="col3">
+                        @item.Col3
+                    </td>
+                }
+                @if (Model.NoOfCols > 3)
+                {
+                    <td id="col4">
+                        @item.Col4
+                    </td>
+                }
+                @if (Model.NoOfCols > 4)
+                {
+                    <td id="col5">
+                        @item.Col5
+                    </td>
+                }
+                @if (Model.NoOfCols > 5)
+                {
+                    <td id="col6">
+                        @item.Col6
+                    </td>
+                }
+                @if (Model.NoOfCols > 6)
+                {
+                    <td id="col7">
+                        @item.Col7
+                    </td>
+                }
+                @if (Model.NoOfCols > 7)
+                {
+                    <td id="col8">
+                        @item.Col8
+                    </td>
+                }
+                @if (Model.NoOfCols > 8)
+                {
+                    <td id="col9">
+                        @item.Col9
+                    </td>
+                }
+                @if (Model.NoOfCols > 9)
+                {
+                    <td id="col10">
+                        @item.Col10
+                    </td>
+                }
+                @if (Model.NoOfCols > 10)
+                {
+                    <td id="col11">
+                        @item.Col11
+                    </td>
+                }
+                @if (Model.NoOfCols > 11)
+                {
+                    <td id="col12">
+                        @item.Col12
+                    </td>
+                }
+                @if (Model.NoOfCols > 12)
+                {
+                    <td id="col13">
+                        @item.Col13
+                    </td>
+                }
+                @if (Model.NoOfCols > 13)
+                {
+                    <td id="col14">
+                        @item.Col14
+                    </td>
+                }
+                @if (Model.NoOfCols > 14)
+                {
+                    <td id="col15">
+                        @item.Col15
+                    </td>
+                }
+                @if (Model.NoOfCols > 15)
+                {
+                    <td id="col16">
+                        @item.Col16
+                    </td>
+                }
+                @if (Model.NoOfCols > 16)
+                {
+                    <td id="col17">
+                        @item.Col17
+                    </td>
+                }
+                @if (Model.NoOfCols > 17)
+                {
+                    <td id="col18">
+                        @item.Col18
+                    </td>
+                }
+                @if (Model.NoOfCols > 18)
+                {
+                    <td id="col19">
+                        @item.Col19
+                    </td>
+                }
+                @if (Model.NoOfCols == 20)
+                {
+                    <td id="col20">
+                        @item.Col20
+                    </td>
+                }
+                <td>
+                    @item.Valid
+                </td>
+                <td>
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "CsvImport", routeValues: new
+                        {
+                            id = item.ImportData_Id,
+                            lastOrder = ViewBag.SortColumn,
+                            page = ViewBag.Page,
+                            libraryId = Model.LibraryId,
+                            userId = Model.UserId
+                        },
+                        htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </table>
+    @Html.PagedListPager((IPagedList)Model.ImportList, page => Url.Action("Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = page, libraryId = Model.LibraryId, userId = Model.UserId }))
+
+</div>
+
+</body>
+</html>
+
+

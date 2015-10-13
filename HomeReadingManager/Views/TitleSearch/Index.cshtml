@@ -1,0 +1,360 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.TitleSearch
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "TitleSearch", FormMethod.Post, new { id = "thisForm" }))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-horizontal">
+                @Html.HiddenFor(model => model.LibraryId, new { @id = "libraryId"})
+                @Html.HiddenFor(model => model.UserId, new { @id = "userId" })
+                @Html.HiddenFor(model => model.TitleId, new { @id = "titleId" })
+                <h4>Updating options</h4>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Labels, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.Labels, new { @id = "chLabels" })
+                        </div>
+                    </div>
+                </div>
+                <div class="centeredHeaderBlue">
+                    New titles:
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SetNewStock, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.SetNewStock)
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SetLevels_Id, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("SetLevels_Id", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownListFor(model => model.SetLevels_Id, new SelectList(Model.Levels, "Id", "ReadLevel", Model.SetLevels_Id), "Not set")
+                    </div>
+                </div>
+                <div class="centeredHeaderBlue">
+                    Existing titles:
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IncrementStock, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.IncrementStock)
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DoUpdate, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.DoUpdate)
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <table class="table">
+                <tr>
+                    <th></th>
+
+                    <th class="centeredHeaderBlue">Last five titles added</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.ProductTitles)
+                {
+                    <tr>
+                        <td>
+                            @{
+                                if (item.Jacket == null)
+                                {
+                                    <img src="~/Images/NoJacket1.jpg" width="47" height="60" />
+                                }
+                                else
+                                {
+                                    string imageBase64 = Convert.ToBase64String(item.Jacket);
+                                    string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                                    <img src="@imageSrc" width="47" height="60" />
+                                }
+                            }
+                        </td>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                           @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-search'></span>", "Select", "", "TitleSearch", routeValues: null,
+                                                        htmlAttributes: new { @class = "btn btn-info lastFive", @data_Id = @item.TitleId})
+                             
+                            @*<button type="submit" id="" class="btn btn-info, lastFive"><span class="glyphicon glyphicon-search"></span></button>  , onclick = "javascript:document.forms[0].submit();"*@
+                                                                    
+                        </td>
+                       
+                    </tr>
+                }
+            </table>
+        </div>
+       
+        <div class="col-md-8" id="reportsDiv">
+            <hr />
+            <p>
+                Scan barcode or type in the ISBN: @Html.TextBox("Barcode", ViewBag.SearchString as string, new { @autofocus = "autofocus" })
+                <input type="submit" value="Search" id="btnBarcode" class="btn btn-success" />
+               
+            </p>
+            @*<p>
+                <input type="button" value="Force" id="btnForce" class="btn btn-primary" />
+
+            </p>
+            <div class="jsonFeed">
+
+            </div>*@
+            <p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+            <div id="dvProductDetails">
+                @Html.Action("TitleDetails", "TitleSearch", new { id = Model.TitleId, libraryId = Model.LibraryId, userId = Model.UserId });
+            </div>
+            <div id="dvNoDetails" hidden="hidden">
+                @Html.Action("NoDetails", "TitleSearch");
+            </div>
+
+        </div>
+    </div>
+
+}
+@section Scripts
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        function set(value) {
+            return value;
+        }
+        $('input[name=Barcode]').val('');
+        $("#titleId").val(0);
+
+        id = set(@Html.Raw(Json.Encode(Model.TitleId)));
+        if (id == 0) {
+            $("#dvProductDetails").hide();
+            $("#dvNoDetails").show();
+        }
+
+       
+        //$(function () {
+        //    $('#btnForce').on('click', function () {
+        //        $.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:9780859537278&maxResults=1", function (data) {
+        //            var items = [];
+        //            alert("here");
+
+        //            $.each(data, function (key, val) {
+        //                items.push("<li id='" + key + "'>" + val + "</li>");
+        //            });
+
+        //            $("<ul/>", {
+        //                "class": "jsonFeed",
+        //                html: items.join("")
+        //            }).appendTo("body");
+                   
+        //        });
+                //var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:9780859537278";
+                //    $.getJSON(url, function (json) {
+                //        var html = json.data;
+                //        alert("here " + html);
+                //        $('.jsonFeed').html(html);
+                //    });
+               
+                @*echo "Authors = " . @implode(",", $data['items'][0]['volumeInfo']['authors']);    
+                echo "Pagecount = " . $data['items'][0]['volumeInfo']['pageCount'];*@
+               // var libraryId = $("#libraryId").html();
+                //var userId = $("#userId").html();
+                @*$.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/TitleSearch/ForceGoogle")",
+                    data: {
+                    title: id,
+                    decrement : false,
+                    doLabels: doLabels,
+                    libraryId: libraryId,
+                    userId: userId
+                    },
+                dataType: 'html', 
+                success: function (result) {
+                }
+            });*@
+    //    });
+    //});
+
+
+
+        $(function(e){
+            $('.lastFive').click(function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).attr('data-Id');
+               
+                $("#titleId").val(id);
+                $("#thisForm").submit();
+                //document.forms[0].submit();
+            });
+        });
+
+        $(function () {
+           $('#incLabels').click(function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).attr('data-Id');
+                var labels = $("#labels").html();
+                var stock = $("#stock").html();
+                var libraryId = $("#libraryId").html();
+                var userId = $("#userId").html();
+                if (parseInt(labels) < parseInt(stock))
+                {
+                    $("#labels").html(parseInt(labels) + 1);
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/TitleSearch/IncrementLabels")",
+                        data: {
+                            id: id,
+                            inc: 1,
+                            libraryId: libraryId,
+                            userId: userId
+                        },
+                        dataType: 'html', 
+                        success: function (result) {
+                        }
+                    });
+                }
+            });
+        });
+
+        $(function () {
+            $('#decLabels').click(function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).attr('data-Id');
+                var labels = $("#labels").html();
+                var libraryId = $("#libraryId").html();
+                var userId = $("#userId").html();
+                if (parseInt(labels) > 0) {
+                    $("#labels").html(parseInt(labels) - 1);
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/TitleSearch/SetReadingLevel")",
+                        data: {
+                            id: id,
+                            inc: -1,
+                            libraryId: libraryId,
+                            userId: userId
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                        }
+                    });
+                }
+            });
+        });
+
+        $(function () {
+            $('#incStock').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).attr('data-Id');
+                var stock = $("#stock").html();
+                $("#stock").html(parseInt(stock) + 1);
+                var doLabels = $('#chLabels').is(':checked');
+                if (doLabels) {
+                    var labels = $("#labels").html();
+                    if (parseInt(labels) < parseInt(stock) + 1) {
+                        $("#labels").html(parseInt(labels) + 1);
+                    }
+                    else {
+                        doLabels = false;
+                    }
+
+                }
+                var libraryId = $("#libraryId").html();
+                var userId = $("#userId").html();
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/TitleSearch/IncrementStock")",
+                    data: {
+                        id: id,
+                        decrement : false,
+                        doLabels: doLabels,
+                        libraryId: libraryId,
+                        userId: userId
+                    },
+                    dataType: 'html', 
+                    success: function (result) {
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $('#decStock').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var id = $(this).attr('data-Id');
+                var stock = $("#stock").html();
+                var labels = $("#labels").html();
+                var doLabels = (parseInt(labels) > 0 && parseInt(labels) == parseInt(stock));
+                $("#stock").html(parseInt(stock) - 1);
+                if (doLabels) {
+                    $("#labels").html(parseInt(labels) - 1);
+                }
+                var libraryId = $("#libraryId").html();
+                var userId = $("#userId").html();
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/TitleSearch/IncrementStock")",
+                    data: {
+                        id: id,
+                        decrement: true,
+                        doLabels: doLabels,
+                        libraryId: libraryId,
+                        userId: userId
+                        },
+                    dataType: 'html', 
+                    success: function (result) {
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $('#ddlLevel').on('change', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var levelId = $(this).val();
+                var id = $(this).attr('data-Id');
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/TitleSearch/SetReadingLevel")",
+                    data: {
+                    id: id,
+                    levelId: levelId  
+                    },
+                    dataType: 'html', 
+                    success: function (result) {
+                        //$('#reportsDiv').html(result);
+                    }
+                });
+            });
+        });
+    });
+        
+    </script>
+}
+    
+
+
+
+

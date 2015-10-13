@@ -1,0 +1,199 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.SummaryList
+@{
+    ViewBag.Title = "Student Summary";
+    Layout = "~/Views/Shared/_MyPartial.cshtml";
+
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="col-md-12">
+        <table class="table">
+            <tr style="height:35px">
+                <th>
+                    @*@Html.ActionLink("M/F", "Summary", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "Gender", sortOrder = Model.SortOrder, asc = Model.Ascending })*@
+                    @Html.ActionLink("M/F", "Summary", routeValues: null, htmlAttributes: new {  @class = "summarySort", @id = "Gender" })
+                </th>
+                <th>
+                    @*@Html.ActionLink("Student", "Summary", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "FirstName", sortOrder = Model.SortOrder, asc = Model.Ascending })*@
+                    @Html.ActionLink("Student", "Summary", routeValues: null, htmlAttributes: new { @class = "summarySort", @id = "FirstName" })
+                </th>
+                @*<th colspan="2" class="selectStudent">@Html.ActionLink("Grade", "MyClass", new { classId = Model.ClassId, className = Model.ClassName, newOrder = "Grade", sortOrder = Model.SortOrder, asc = Model.Ascending })</th>*@
+                <th class="selectStudent">@Html.ActionLink("Grade", "Summary", routeValues: null, htmlAttributes: new { @class = "summarySort", id = "Grade" })</th>
+                <th>
+                    Select
+                </th>
+                <th>
+                    Reports
+                </th>
+                <th>
+                    Ticked
+                </th>
+
+                <th>
+                    @*@Html.ActionLink("Read Level", "Index", new { sortOrder = "Level", lastOrder = ViewBag.SortColumn })*@
+                    @Html.ActionLink("Read Level", "Summary", routeValues: null, htmlAttributes: new { @class = "summarySort", @id = "Level" })
+                </th>
+                <th>
+                    @*Books Read*@
+                    @Html.ActionLink("Books Read", "Summary", routeValues: null, htmlAttributes: new { @class = "summarySort", @id = "Read" })
+                </th>
+                <th>
+                    On Loan
+                </th>
+                <th>
+                    Overdue
+                </th>
+
+            </tr>
+            @foreach (var item in Model.Summaries)
+            {
+                var ssId = "ss" + item.Id;
+                <tr id= @ssId style="height:57px">
+                    <td>
+                        @{
+                            if (item.Gender == "M")
+                            {
+                                <img src="~/Images/StudentBoy.jpg" width="31" height="40" />
+                            }
+                            else if (item.Gender == "F")
+                            {
+                                <img src="~/Images/StudentGirl.jpg" width="31" height="40" />
+                                        @*string imageBase64 = Convert.ToBase64String(item.Portrait);
+                                                string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                                            <img src="@imageSrc" width="47" height="60" />*@
+                            }
+                            else
+                            {
+                                <img src="~/Images/TeacherOwl.jpg" width="31" height="40" />
+                            }
+                        }
+                    </td>
+                    <td>
+                        @item.FullName.Substring(0, 22)
+                    </td>
+                    <td>
+                        @item.Grade
+                    </td>
+                    <td>
+
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-hand-left'></span>", "Select student", "", "Students", routeValues: null,
+                                                                   htmlAttributes: new { @class = "btn btn-success selectStudent", @data_Id = item.Id, @id = item.GradeId })
+                    </td>
+                    <td>
+                        @if (item.ReportStatus == 3)
+                        {
+                            <img class="tickImage" src="~/Images/tick.jpg" />
+                        }
+                        else if (item.ReportStatus == 1)
+                        {
+                            <img class="tickImage" src="~/Images/cross.jpg" />
+                        }
+                    </td>
+                    <td>
+                        @if (item.AllTicked == 3)
+                        {
+                            <img class="tickImage" src="~/Images/tick.jpg" />
+                        }
+                        else if (item.AllTicked == 2)
+                        {
+                            <img class="tickImage" src="~/Images/cross.jpg" />
+                        }
+                    </td>
+
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @item.BooksRead
+                    </td>
+                    <td>
+                        @item.OnLoan
+                    </td>
+                    <td>
+                        <p class="textRed">@Html.DisplayFor(m => item.Overdue)</p>
+                    </td>
+
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            function set(value) {
+                return value;
+            }
+
+            function hasClass(element, cls) {
+                return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+            }
+
+            id = window.parent.$('#selectedId').val();
+            if (id > 0) {
+                $('#ss' + id).addClass('selectedId');
+               // var x = $('.selectedId').attr('id');
+               // alert("Here " + x);
+            }
+
+            $(function () {
+                $('.summarySort').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+
+                    classId = set(@Html.Raw(Json.Encode(Model.ClassId)));
+                    className = set(@Html.Raw(Json.Encode(Model.ClassName)));
+                    sortOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+                    asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+
+                    var newOrder = $(this).attr('id')
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Students/Summary")",
+                        data: {
+                            classId: classId,
+                            className: className,
+                            newOrder: newOrder,
+                            sortOrder: sortOrder,
+                            asc: asc
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            $("#dvActivity").empty().append(result);
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('.selectStudent').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).data('id')
+                    var gradeId = $(this).attr('id')
+                    //$("#selectedId").val(id);
+                    $(".selectedId").removeClass('selectedId');
+                    $('#' + id).addClass('selectedId');
+                    $('#ss' + id).addClass('selectedId');
+                    //$('#selectedGrade').val(gradeId);
+                    window.parent.$('#selectedId').val(id);
+                    window.parent.$('#selectedGrade').val(gradeId);
+                  
+                   //$(".btn-primary").removeClass('btn-primary');
+                   // this.addClass('btn-primary');
+                   // var x = $('.selectedId').attr('id');
+                   // alert("Here " + x);
+                });
+            });
+
+
+        });
+    </script>
+}

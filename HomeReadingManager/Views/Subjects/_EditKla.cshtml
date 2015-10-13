@@ -1,0 +1,113 @@
+﻿@model HomeReadingManager.ViewModels.Kla
+
+@{
+    ViewBag.Title = "EditKla";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+        <div class="alert alert-warning">
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.GradeReportId)
+
+            <div class="form-horizontal">
+                <h4>Edit Key Learning Area</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 focus">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @maxlength = "60" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PageBreak, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.PageBreak)
+                        @Html.ValidationMessageFor(model => model.PageBreak, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @if (Model.ShowComments)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.KlaComments, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.KlaComments)
+                            @Html.ValidationMessageFor(model => model.KlaComments, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.ReportType, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <p>
+                                @Html.RadioButton("ReportType", 1, Model.ReportType == 1) English or Maths style
+                                &nbsp;&nbsp;
+                                @Html.ActionLink("Show details", "", routeValues: null, htmlAttributes: new { @class = "hideShow", @data_Id = "report1" })
+                                <ul class="list-group text-muted small list-unstyled" hidden="hidden" id="report1">
+                                    <li class="list-group-item">* Students are graded with an overall achievement mark and an overall effort mark</li>
+                                    <li class="list-group-item">* Assesment keys: Limited/Basic/Sound/High/Outstanding</li>
+                                    <li class="list-group-item">* Effort assesment keys: Minimal/Inconsistent/Satisfactory/Very Good/Excellent</li>
+                                    <li class="list-group-item">* The KLA can optionally have substrands</li>
+                                    <li class="list-group-item">* Achievement assesments shown against each assessment area</li>
+                                </ul>
+                            </p>
+                            <p>
+                                @Html.RadioButton("ReportType", 2, Model.ReportType == 2) P.D.H.P.E. or Creative Arts style
+                                &nbsp;&nbsp;
+                                @Html.ActionLink("Show details", "", routeValues: null, htmlAttributes: new { @class = "hideShow", @data_Id = "report2" })
+                                <ul class="list-group text-muted small list-unstyled" hidden="hidden" id="report2">
+                                    <li class="list-group-item">* Assessment is made against the assesment areas only</li>
+                                    <li class="list-group-item">* Assesment keys: Limited/Basic/Sound/High/Outstanding</li>
+                                    <li class="list-group-item">* Substrands are marked for effort only</li>
+                                    <li class="list-group-item">* Effort assesment keys: Minimal/Inconsistent/Satisfactory/Very Good/Excellent</li>
+                                </ul>
+                            </p>
+                            <p>
+                                @Html.RadioButton("ReportType", 3, Model.ReportType == 3) Student general assessment etc
+                                &nbsp;&nbsp;
+                                @Html.ActionLink("Show details", "", routeValues: null, htmlAttributes: new { @class = "hideShow", @data_Id = "report3" })
+                                <ul class="list-group text-muted small list-unstyled" hidden="hidden" id="report3">
+                                    <li class="list-group-item">* Assesments shown against assessment area only</li>
+                                    <li class="list-group-item">* Assesment keys: Rarely/Sometimes/Usually/Always</li>
+                                    <li class="list-group-item">* No substrands</li>
+                                </ul>
+                            </p>
+                            <p>
+                                @Html.RadioButton("ReportType", 4, Model.ReportType == 4) School activities etc
+                                &nbsp;&nbsp;
+                                @Html.ActionLink("Show details", "", routeValues: null, htmlAttributes: new { @class = "hideShow", @data_Id = "report4" })
+                                <ul class="list-group text-muted small list-unstyled" hidden="hidden" id="report4">
+                                    <li class="list-group-item">* Assesments shown against assessment area only</li>
+                                    <li class="list-group-item">* Assesment: displays tick when achieved</li>
+                                    <li class="list-group-item">* No substrands</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-2">
+                    <input type="submit" value="Save" class="btn btn-primary closeModel btnMedium" id="approve-btn" />
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-warning closeModel btnMedium" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

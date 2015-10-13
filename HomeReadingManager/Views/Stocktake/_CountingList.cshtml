@@ -1,0 +1,80 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.CountModel
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+@*<head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Select Title</title>
+    </head>*@
+<body>
+@using (Html.BeginForm("Index", "Stocktake", FormMethod.Post))
+{
+    <div class="modal-body">
+        <p>
+            Scan barcode or enter search: @Html.TextBox("SearchString", ViewBag.SearchString as string, new { @autofocus = "autofocus" })
+            <input type="submit" value="Search" />
+        </p>
+        @Html.ActionLink("Print counting list", "PrintCountList", new { target = "_blank" })
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(m=>Model.CountLists.FirstOrDefault().Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => Model.CountLists.FirstOrDefault().Isbn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => Model.CountLists.FirstOrDefault().ReadLevel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => Model.CountLists.FirstOrDefault().Count)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => Model.CountLists.FirstOrDefault().Total)
+                </th>
+                <th></th>
+           </tr>
+
+            @foreach (var item in Model.CountLists)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Isbn
+                    </td>
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @item.Count
+                    </td>
+                    <td>
+                        @item.Total
+                    </td>
+                    <td>
+                       @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-arrow-down'></span>", "Decrement", "Decrement", "Stocktake", routeValues: new { 
+                                                                                            id = item.STCount_Id, 
+                                                                                            page = Model.Page,
+                                                                                            libraryId = Model.LibraryId,
+                                                                                            userId = Model.UserId},
+                           htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)Model.CountLists, page => Url.Action("Index", new { page = page, libraryId = Model.LibraryId, userId = Model.UserId }) )
+
+    </div>
+}
+</body>
+</html>

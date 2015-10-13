@@ -1,0 +1,79 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.Imports
+@{
+    ViewBag.Title = "CSV import";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "CsvImport", FormMethod.Post, new { id = "thisForm" }))
+{
+    <div>
+        <h2>CSV File Import</h2>
+        <h4>
+            @Html.DisplayFor(m => m.Description)
+        </h4>
+        <div class="row">
+            <div class="col-md-2">
+                @Html.ActionLink("Validate file", "Index", new { page = 1, fileAction = 1, libraryId = Model.LibraryId, userId = Model.UserId })
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Import file", "Index", new { page = 1, fileAction = 2, libraryId = Model.LibraryId, userId = Model.UserId })
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Remove file", "Index", new { page = 1, fileAction = 3, libraryId = Model.LibraryId, userId = Model.UserId })
+            </div>
+        </div>
+        <div>
+            @Html.Action("ImportsList", "CsvImport", new
+                                                {
+                                                    id = Model.ImportFile_Id,
+                                                    noOfCols = Model.NoOfCols,
+                                                    importType = Model.ImportType,
+                                                    sortOrder = Model.SortOrder,
+                                                    asc = Model.Ascending,
+                                                    page = Model.Page,
+                                                    libraryId = Model.LibraryId,
+                                                    userId = Model.UserId
+                                                })
+        </div>
+
+
+    </div>
+
+
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(function () {
+                $('.ddl').on('change', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var mappedCol = $(this).val();
+                    var id = $(this).attr('data-Id');
+
+                    var colNo = $(this).attr('id');
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/CsvImport/SetColumnHeader")",
+                        data: {
+                            importMapId: id,
+                            mappedCol: mappedCol
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            $('#Col' + colNo).text(mappedCol);
+
+                        }
+                    });
+                });
+            });
+        });
+
+
+    </script>
+}
+
+

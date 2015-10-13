@@ -1,0 +1,197 @@
+﻿@model HomeReadingManager.ViewModels.ProductList
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.Title</h2>
+@*<h2>@Html.DisplayFor(model => model.Title)</h2>*@
+<div>
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Isbn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Isbn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReadLevel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReadLevel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Onhand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Onhand)
+            @{
+                if (Model.OnLoan > 0)
+                {
+                    <text><i>(Available:</i></text><i>@Html.DisplayFor(model => model.Available)</i><text><i>)</i></text>
+                }
+            }
+        </dd>
+        @{
+            if (Model.OnLoan > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.CurrentLoans)
+                </dt>
+
+                <dd>
+                    <table class="table">
+                        <tr>
+                            <th>Student</th>
+                            <th>Borrowed on</th>
+                        </tr>
+
+                        @foreach (var item in Model.CurrentLoans)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Borrowed)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </dd>
+            }
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.YearLoans)
+        </dt>
+
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Year</th>
+                    <th>Loans</th>
+                </tr>
+
+                @foreach (var item in Model.YearLoans)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Year)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Loans)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Authors)
+        </dt>
+        <dd>
+            @{
+                if (Model.Authors.Count > 0)
+                {
+                    <table class="table">
+                        <tr>
+                            <th>Author</th>
+                            <th>Role</th>
+                        </tr>
+
+                        @foreach (var item in Model.Authors)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Author)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Role)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <text>Not listed</text>
+                }
+            }
+        </dd>
+        <dt>
+
+        </dt>
+
+        <dd>
+            @{
+                if (Model.Image_Id > 0)
+                {
+                    string imageBase64 = Convert.ToBase64String(Model.Jacket);
+                    string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                    <img src="@imageSrc" width="150" height="150" />
+                }
+            }
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @{
+                if (String.IsNullOrEmpty(Model.Description))
+                {
+                    <text>Not listed</text>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Description)
+                }
+            }
+        </dd>
+        <dt>
+
+        </dt>
+
+        <dd>
+            @if (Model.Inactive == true)
+            { <text>Inactive&nbsp;</text>
+            }
+            @*@if (Model.Authorised != true || Model.Library_Id != ViewBag.LibraryId)
+                { <text>Not authorised</text>}*@
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Authorised)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Authorised)
+            </dd>*@
+        <dt>
+
+        </dt>
+
+        <dd>
+            <i> @Html.DisplayNameFor(model => model.Product_Id) : @Html.DisplayFor(model => model.Product_Id) &nbsp; @Html.DisplayNameFor(model => model.Entered) : @Html.DisplayFor(model => model.Entered)</i>
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit title", "Edit", new { id = Model.Product_Id }) |
+    @Html.ActionLink("Back to list", "Index", new { levelList = ViewBag.LevelFilter, searchString = ViewBag.SearchString, lastOrder = ViewBag.SortColumn, page = ViewBag.Page, searchReturn = ViewBag.SearchReturn })
+</p>

@@ -1,0 +1,173 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Home Reading Manager</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .btn-wide {
+            width: 80px;
+            margin-right: 1px;
+            margin-bottom: 1px;
+        }
+
+        .centerAlign {
+            text-align: center;
+        }
+
+        .btn-letter {
+            width: 28px; 
+            height: 28px;  
+            font-size: 17.5px;
+            padding-bottom: 28px;
+            padding-right: 22px;
+            /*margin-right: 1px;*/
+            /*text-align: center;*/
+        }
+
+        .tickImage {
+            width: 30px;
+            height: 30px;
+        }
+
+        div.outer {
+            overflow: hidden;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        div.centre {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        div.marksLabel {
+            width: 135px;
+            float: left;
+        }
+
+        div.marks {
+            width: 450px;
+            float: left;
+        }
+        div.indicator {
+            width: 580px;
+            /*text-wrap:none;*/
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            float: left;
+            font-size: 85%;
+         }
+        .textRed {
+            color: red;
+            font-weight: bold;
+          }
+        .textRedSmall {
+            color: red;
+            font-weight: bold;
+            font-size: small ;
+        }
+       .returned {
+            color: green;
+            font-weight: bold;
+        }
+        .newLoan {
+            color: navy;
+            font-weight: bold;
+        }
+        .days {
+            color: black;
+            font-weight: bold;
+        }
+        .btnMedium{
+            width: 120px;
+        }
+        .ddlWidth {
+            width: 80px;
+        }
+        .ddlMedWidth {
+            width: 100px;
+        }
+        .selectedId {
+            background-color:  gold;
+        }
+    </style>
+
+
+
+</head>
+<body>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+           
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+
+        $('.datepicker').datepicker();
+        //$('.datepicker').datepicker().on('changeDate', function (ev) {
+        //    alert("here at last");
+        //});
+        //function set(value) {
+        //    return value;
+        //}
+
+
+
+
+    });
+
+    $(function () {
+        // Initialize numeric spinner input boxes
+        //$(".numeric-spinner").spinedit();
+
+        // Initalize modal dialog
+        // attach modal-container bootstrap attributes to links with .modal-link class.
+        // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+        $('body').on('click', '.modal-link', function (e) {
+            e.preventDefault();
+            $(this).attr('data-target', '#modal-container');
+            $(this).attr('data-toggle', 'modal');
+        });
+
+        // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+        $('body').on('click', '.modal-close-btn', function () {
+            $('#modal-container').modal('hide');
+        });
+
+        //clear modal cache, so that new content can be loaded
+        $('#modal-container').on('hidden.bs.modal', function () {
+
+            $(this).removeData('bs.modal');
+        });
+
+        $('#CancelModal').on('click', function () {
+            return false;
+        });
+   });
+</script>
+

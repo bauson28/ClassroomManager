@@ -1,0 +1,43 @@
+﻿@using HomeReadingManager.MyClasses
+@model IEnumerable<HomeReadingManager.Models.ImportMap>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+@*<head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Select Title</title>
+    </head>*@
+<body>
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TempCol)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MappedCol)
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.TempCol
+                    </td>
+                    <td>
+                        @item.MappedCol
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>
+
+

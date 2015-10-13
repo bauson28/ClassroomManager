@@ -1,0 +1,57 @@
+﻿@model HomeReadingManager.ViewModels.AuthorEditModel
+
+@{
+    ViewBag.Title = "EditAuthor";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "ProdAuthors", FormMethod.Post))
+{
+    <div class="modal-body">
+        <div class="alert alert-warning">
+            <h4>Edit author</h4>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => Model.ProductId)
+            <h4>@Html.DisplayFor(m => Model.Title)</h4>
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => Model.Id)
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Author, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 focus">
+                        @Html.EditorFor(m => Model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => Model.Author, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Role_Id, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => Model.Role_Id, new SelectList(Model.Roles, "Role_Id", "Role", Model.Role_Id))
+                        @Html.ValidationMessageFor(m => Model.Role_Id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-1">
+                        <input type="submit" value="Save changes" class="btn btn-primary closeModel" />
+                    </div>
+                    <div class="col-md-offset-1 col-md-4">
+                        <button type="button" class="btn btn-warning closeModel" data-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+  
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+

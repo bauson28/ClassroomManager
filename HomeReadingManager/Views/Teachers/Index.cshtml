@@ -1,0 +1,107 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.TeachersVM
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Teachers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<h2>Teachers</h2>
+
+
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.ActionLink("Add new teacher or user", "Create", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, libraryId = Model.LibraryId })
+        &nbsp; &nbsp; &nbsp;&nbsp;
+
+
+        @if (Model.ShowInactive == true)
+        {
+            <text>Inactive records</text>
+            @Html.ActionLink("Show active only", "Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, showInactive = false, page = Model.Page, libraryId = Model.LibraryId })
+        }
+        else
+        {
+            @Html.ActionLink("Show inactive records", "Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, showInactive = true, page = Model.Page, libraryId = Model.LibraryId })
+        }
+    </p>
+    <p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Teachers.FirstOrDefault().Salutation)
+        </th>
+        <th>
+            @Html.ActionLink("First Name", "Index", new { sortOrder = Model.SortOrder, newOrder = "FirstName", asc = Model.Ascending, showInactive = Model.ShowInactive, libraryId = Model.LibraryId, page = Model.Page })
+        </th>
+        <th>
+            @Html.ActionLink("Last Name", "Index", new { sortOrder = Model.SortOrder, newOrder = "LastName", asc = Model.Ascending, showInactive = Model.ShowInactive, libraryId = Model.LibraryId, page = Model.Page })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Teachers.FirstOrDefault().Email)
+        </th>
+
+        <th></th>
+    </tr>
+    @foreach (var teacher in Model.Teachers)
+    {
+        <tr>
+            <td>
+                @teacher.Salutation
+            </td>
+            <td>
+                @teacher.FirstName
+            </td>
+            <td>
+                @teacher.LastName
+            </td>
+            <td>
+                @teacher.Email
+            </td>
+            <td>
+                <div class="pull-right">
+                    @if (teacher.AllowEdit)
+                    {
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "Teachers", routeValues: new
+                                                                {
+                                                                    id = teacher.Teacher_Id,
+                                                                    sortOrder = Model.SortOrder,
+                                                                    asc = Model.Ascending,
+                                                                    page = Model.Page,
+                                                                    libraryId = Model.LibraryId
+                                                                },
+                                                                htmlAttributes: new { @class = "btn btn-primary" })
+                    }
+                    else
+                    {
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>", "Edit", "Edit", "Teachers", routeValues: null, htmlAttributes: new { @class = "btn btn-info disabled" })
+                    }
+
+                    @if (Model.IsAdministrator)
+                    {
+                        <text>&nbsp;</text>
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "Teachers", routeValues: new
+                                                           {
+                                                               id = teacher.Teacher_Id,
+                                                               sortOrder = Model.SortOrder,
+                                                               asc = Model.Ascending,
+                                                               page = Model.Page,
+                                                               libraryId = Model.LibraryId
+                                                           },
+                                                           htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.PagedListPager((IPagedList)Model.Teachers, page => Url.Action("Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, showInactive = Model.ShowInactive, libraryId = Model.LibraryId, page }))
+
+

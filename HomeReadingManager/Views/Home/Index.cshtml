@@ -1,0 +1,124 @@
+﻿@model HomeReadingManager.ViewModels.HomeViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<style>
+    #classLink
+    {
+        background: url(../Images/TeacherOwl.jpg) no-repeat top left  ;
+        background-size: contain;
+        display: block;
+        height: 231px;
+        text-indent: -9999px; /* hides the link text */
+    }
+     #homeReadingLink
+    {
+        background: url(../Images/StudentsDesk.jpg) no-repeat top left;
+        display: block;
+        background-size: contain;
+        height: 231px;
+        text-indent: -9999px; /* hides the link text */
+    }
+</style>
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "thisForm" }))
+{
+<div class="jumbotron">
+    <h1>
+        Classroom Manager
+    </h1>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Welcome to Classroom Manager</h2>
+        <p>
+            Manage your class records on-line, efficiently and easily from anywhere in your school or at home.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @if (!Model.LoggedIn)
+          { 
+            <h2>@Html.ActionLink("Login", "Login", "Account")</h2>
+            <p class="textItalic">@Html.ActionLink("Forgot password", "ForgotPassword", "Account")</p>
+            @*<hr />
+            
+               
+            <hr />*@
+          }
+        else
+        {
+            <h2 style="color:navy">@Html.DisplayFor(m=>Model.UserName)</h2>
+            <h4 style="color:navy">@Html.DisplayFor(m => Model.School)</h4>
+            @*<p class="textItalic">@Html.ActionLink("Change password", "ResetPassword", "Account")</p>*@
+        }
+
+    </div>
+    <div class="col-md-4">
+
+        <h2>@Html.ActionLink("Student reports", "SelectClass", "Students")</h2>
+        <h3>Create comprehensive student reports quickly and efficiently.</h3>
+
+    </div>
+    <div class="col-md-4">
+        <h2>@Html.ActionLink("Home Reading", "StudentLoans", "Loans")</h2>
+        <h3>Manage your school's Home Reading program efficiently and easily from anywhere in your school.</h3>
+    </div>
+</div>
+    <div class="row">
+<div class="col-md-4">
+    @if (!Model.LoggedIn)
+        {
+        <h4>New Users</h4>
+        <p>If you require an account, see the website's administrator at your school</p>
+        <p>New schools should contact the @Html.ActionLink("Classroom Manager team", "Contact", "Home")</p>
+        <p>Visitors to the site can log in as a guest to view a sample school on the demonstration database</p>
+        <button type="submit" class="btn btn-warning btn-sm" id="btnGuest">Login as Guest</button>
+        }
+        else
+        {
+
+        <img src="@Url.Content("~/Images/ThreeKids.jpg")" alt="IMAGES" width="231" height="231" />
+        }
+    </div>
+      
+        <div class="col-md-4">
+                           
+                @Html.ActionLink("My Class", "SelectClass", "Students",null, new { @id = "classLink" })
+                @*<img src="@Url.Content("~/Images/StudentsDesk.jpg")" alt="IMAGES" width="231" height="231" />*@
+
+</div>
+        <div class="col-md-4">
+            @Html.ActionLink("My Class", "StudentLoans", "Loans", null,new { @id = "homeReadingLink" })
+            @*<img src="@Url.Content("~/Images/StudentsTrio.jpg")" alt="IMAGES" width="231" height="231" />*@
+        </div>
+      
+    </div>
+}
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            $(function () {
+                $('#btnGuest').on('click', function (evt) {
+                   
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    $.ajax({
+                    type: 'GET',
+                    url: "@Url.Content("~/Home/GuestLogin")",
+                    data: {},
+                    dataType: 'json',
+                    success: function (result) {
+                        $("#thisForm").submit();
+                    }
+                });
+
+            });
+        });
+        })
+    </script>
+
+}

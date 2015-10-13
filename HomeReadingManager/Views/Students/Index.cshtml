@@ -1,0 +1,118 @@
+﻿@model PagedList.IPagedList<HomeReadingManager.Models.Student>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+@{
+    ViewBag.Title = "Students";
+}
+
+<h2>Students</h2>
+
+
+@Html.ActionLink("Add new student", "Create")
+
+@using (Html.BeginForm("Index", "Students", FormMethod.Get))
+{
+    <p>
+        Select class: @Html.DropDownList("classList", null, new { @onchange = "this.form.submit(this.value);" })
+        @*IEnumerable<SelectListItem>) ViewData["selectedClass"]  (IEnumerable<SelectListItem>)ViewBag.SelectedClass*@
+        @*Class: @Html.DropDownList("classList", "All")*@
+        Search by name: @Html.TextBox("SearchString", ViewBag.SearchString as string, new { @autofocus = "autofocus" })
+        <input type="submit" value="Search" />
+    </p>
+}
+
+@*<script type="text/javascript">
+    function ChangeCallback(classList) {
+
+    }
+</script>*@
+@*<script type="text/javascript">
+        $('#myCombo').change(function () {
+            //Here goes your code
+        });
+    </script>*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("First Name", "Index", new { classList = ViewBag.ClassFilter, searchString = ViewBag.SearchString, sortOrder = "FirstName", lastOrder = ViewBag.SortColumn })
+            @* @Html.DisplayNameFor(model => model.FirstName)*@
+        </th>
+        <th>
+            @Html.ActionLink("Last Name", "Index", new { classList = ViewBag.ClassFilter, searchString = ViewBag.SearchString, sortOrder = "LastName", lastOrder = ViewBag.SortColumn })
+            @*@Html.DisplayNameFor(model => model.LastName)*@
+        </th>
+
+        <th>
+            @Html.ActionLink("Class", "Index", new { classList = ViewBag.ClassFilter, searchString = ViewBag.SearchString, sortOrder = "Class", lastOrder = ViewBag.SortColumn })
+            @*@Html.DisplayNameFor(model => model.Class.ClassDesc)*@
+        </th>
+       
+        <th>
+            @Html.ActionLink("Reading level", "Index", new { classList = ViewBag.ClassFilter, searchString = ViewBag.SearchString, sortOrder = "Level", lastOrder = ViewBag.SortColumn })
+            @*@Html.DisplayNameFor(model => model.Level.ReadLevel)*@
+        </th>
+        <th></th>
+    </tr>
+    @Html.EditorForModel()
+    
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, classList = ViewBag.ClassFilter, searchString = ViewBag.SearchString, lastOrder = ViewBag.SortColumn }))
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $('.levels').on('change', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var levelId = $(this).val();
+                    var id = $(this).attr('data-Id');
+                   
+                    $.ajax({
+                            type: 'GET',
+                            url: "@Url.Content("~/Students/SetReadingLevel")",
+                            data: {
+                            id: id,
+                            levelId: levelId  
+                            },
+                        dataType: 'html', 
+                        success: function (result) {
+                           //$('#reportsDiv').html(result);
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $('.classes').on('change', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var classId = $(this).val();
+                    var id = $(this).attr('data-Id');
+                    //if (classId == null)
+                    //    classId = 0;
+                    //alert("class is " + classId);
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Students/AssignToClass")",
+                        data: {
+                        id: id,
+                        classId: classId  
+                        },
+                    dataType: 'html', //dataType - html
+                    success: function (result) {
+                     //$('#reportsDiv').html(result);
+                    }
+                });
+            });
+        });
+        }); 
+    </script>
+}

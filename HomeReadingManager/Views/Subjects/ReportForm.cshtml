@@ -1,0 +1,162 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.FrontPage
+
+@{
+    ViewBag.Title = "ReportForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="jumbotron">School Reports</h2>
+@using (Html.BeginForm("ReportForm", "Subjects", FormMethod.Get, new { id = "thisForm" }))
+{
+    @Html.HiddenFor(model => model.GradeReportId, new { @id = "gradeReportId" })
+    @Html.HiddenFor(model => model.SchoolReportId, new { @id = "schoolReportId" })
+    @Html.HiddenFor(m => Model.LibraryId)
+    <hr />
+    @*@Html.HiddenFor(m=>m.SemesterId)*@
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <img src="@Url.Content("~/Images/StudentBoy.jpg")" alt="IMAGES" width="150" height="231" />
+        </div>
+        <div class="col-md-8">
+            <h2>
+                @Html.DisplayFor(m => m.ReportName)
+            </h2>
+            <h4>
+                @Html.DisplayFor(m => m.Subtitle)
+            </h4>
+            @if (Model.RepSemesters != null)
+            {
+                <text>Select semester: &nbsp;&nbsp;</text>
+                @Html.DropDownListFor(m => m.SemesterId, new SelectList(Model.RepSemesters, "Id", "Semester", Model.RepSemesters.First().Id), new { onchange = "this.form.submit();" })
+            }
+            <br />
+            @if (Model.RepSemesters != null)
+            {
+                <br />
+                <br />
+                <h4>
+                    Set up report's front page...
+
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-comment'></span>", "Set up the front page..", "EditFrontPage", "Subjects", routeValues: new
+                                                           {
+                                                               id = Model.Id,
+                                                               semesterId = Model.SemesterId
+                                                           }, htmlAttributes: new { @class = "btn btn-primary" })
+
+                </h4>
+                <p class="textRed">@Html.DisplayFor(m => Model.Message)</p>
+            }
+            @if (Model.RepSemesters != null)
+            {
+                <br />
+                <br />
+                <h4>Design report form: select grade...</h4>
+                <div class="container">
+                    @foreach (var item in Model.RepGrades)
+                    {
+                        if (item.Ready)
+                        {
+                            <button type="button" class="btn btn-success btn-sm  setGrade " id="gradeBtn + @item.GradeId">@item.Grade</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn + @item.GradeId">@item.Grade</button>
+                        }
+                    }
+                    <p>
+                        <font color="blue">Blue</font>: &nbsp;&nbsp; Being designed &nbsp;&nbsp; <font color="green">Green</font>:&nbsp;&nbsp; Ready for marking &nbsp;&nbsp;
+                    </p>
+                    @*<button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn1">Pre-school</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn2">Kindergarten</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn3">Grade 1</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn4">Grade 2</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn5">Grade 3</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn6">Grade 4</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn7">Grade 5</button>
+                        <button type="button" class="btn btn-info btn-sm  setGrade " id="gradeBtn8">Grade 6</button>*@
+                </div>
+                <div id="message" class="textRed"></div>
+                @*<span>Select a grade: </span>@Html.DropDownList("gradeList", null, new { @onchange = "this.form.submit(this.value);", @id = "ddlGrade" })*@
+            }
+            <br />
+            <br />
+            <h4>
+                @*@Html.ActionLink("Add new title", "Create")*@
+                Start next semester's reports...
+
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Start next semester's reports", "OpenNewSemester", "Subjects", routeValues: new
+                                                                               {
+                                                                                   id = Model.Id,
+                                                                                   nextSemester = true,
+                                                                                   libraryId = Model.LibraryId
+                                                                               }, htmlAttributes: new { @class = "modal-link btn btn-primary", @id = "nextSemester" })
+               
+            </h4>
+            
+            @*@Html.HiddenFor(model => model.GradeId)
+                <span id="gradeName">
+                    @Html.HiddenFor(model => model.Grade)
+                </span>*@
+        </div>
+        
+    </div>
+}
+<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content">
+
+    </div>
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function set(value) {
+                return value;
+            }
+
+            $(function () {
+                $('.setGrade').on('click', function () {
+                    var grade = $(this).text();
+                    var id = $('#schoolReportId').val();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/Subjects/SetGrade")",
+                        data: {
+                            grade: grade,
+                            id: id
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                $('#gradeReportId').val(result.Result);
+                                $("#thisForm").submit()
+                            }
+                            else {
+                                $("#message").html(result.Result);
+                            };
+                        },
+                        //error: function (result) {
+                            //$("#message").html(result.Result);
+                        //}
+                    });
+                });
+            });
+
+            //$(function () {
+            //    $('#nextSemester').on('click', function (evt) {
+            //        if (!confirm("Are you sure you want to start next semester's reports?")) {
+            //            evt.preventDefault();
+            //            evt.stopPropagation();
+            //        }
+
+            //    });
+            //});
+
+        });
+    </script>
+}
+

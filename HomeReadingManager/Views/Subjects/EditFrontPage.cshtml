@@ -1,0 +1,171 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.FrontPage
+
+@{
+    ViewBag.Title = "EditFrontPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>School Reports</h2>
+
+@using (Html.BeginForm("EditFrontPage", "Subjects", FormMethod.Post, new { enctype = "multipart/form-data" }))               
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.HiddenFor(model => model.Crest)
+        <h4>Front page options for school reports for @Html.DisplayFor(model => model.ReportName)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.SemesterId)
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Introduction, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.TextAreaFor(model => model.Introduction, new { cols = 1, rows = 4, @class = "form-control textArea" })
+                @Html.ValidationMessageFor(model => model.Introduction, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CommentHeader, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.CommentHeader, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CommentHeader, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Principal, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Principal, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Principal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.Crest, "Crest", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @{
+                    if (Model.ImageId > 0)
+                    {
+                        string imageBase64 = Convert.ToBase64String(Model.Crest);
+                        string imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        <img src="@imageSrc" width="100" height="100" />
+                    }
+                    else
+                    {
+                        <text><i> No crest image</i></text>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @if (Model.ImageId > 0)
+            {
+                @Html.LabelFor(model => model.Crest, "Change crest image", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+            else
+            {
+                @Html.LabelFor(model => model.Crest, "Add crest image", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+
+            <div class="col-md-8">
+                <input type="file" name="crest" id="crest" accept="image/*;capture=camera">
+                 @*@Html.ValidationMessageFor(x => x.Crest)*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Watermark, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Watermark)
+                @Html.ValidationMessageFor(model => model.Watermark, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KlaComments, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.KlaComments)
+                @Html.ValidationMessageFor(model => model.KlaComments, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeptLogo, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.DeptLogo)
+                @Html.ValidationMessageFor(model => model.DeptLogo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.UseSuperCom, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.UseSuperCom)
+                        @Html.ValidationMessageFor(model => model.UseSuperCom, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group super">
+                @Html.LabelFor(model => model.SuperHeader, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.SuperHeader, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SuperHeader, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back", "ReportForm")
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            @*function set(value) {
+                return value;
+            }
+            useSuper = set(@Html.Raw(Json.Encode(Model.UseSuperCom)));
+            if (useSuper) {
+                $(".super").show();
+            } else {
+                $(".super").hide();
+            }
+
+            $('#UseSuperCom').click(function () {
+                if ($(this).prop("checked")) {
+                    $(".super").show();
+                } else {
+                    $(".super").hide();
+                }
+            });*@
+        });
+    </script>
+}
+

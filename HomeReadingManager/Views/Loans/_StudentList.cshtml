@@ -1,0 +1,123 @@
+﻿@using HomeReadingManager.MyClasses;
+@model HomeReadingManager.ViewModels.HomeReading
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "StudentList";
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(function () {
+                $('.selectStudent').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var id = $(this).data('id')
+
+                    var gradeId = $(this).attr('id')
+                    $("#selectedId").val(id);
+                    $(".selectedId").removeClass('selectedId');
+                    $('#' + id).addClass('selectedId');
+                    LoadHomeReading(id);
+
+                });
+            });
+
+            function LoadHomeReading(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Content("~/Loans/HomeReading")",
+                    data: {
+                    studentId: parseInt(id),
+                    },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvActivity").empty().append(result);
+                }
+            });
+        }
+
+        });
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    <h4>
+        @Html.DisplayFor(m => m.FilterName)
+    </h4>
+    <table class="table">
+        <tr style="height:35px">
+            <th>
+                @Html.ActionLink("M/F", "StudentLoans", new
+           {
+               classId = Model.ClassId,
+               className = Model.ClassName,
+               search = Model.Search,
+               newOrder = "Gender",
+               sortOrder = Model.SortOrder,
+               asc = Model.Ascending,
+               libraryId = Model.LibraryId
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Student", "StudentLoans", new
+           {
+               classId = Model.ClassId,
+               className = Model.ClassName,
+               search = Model.Search,
+               newOrder = "FirstName",
+               sortOrder = Model.SortOrder,
+               asc = Model.Ascending,
+               libraryId = Model.LibraryId
+            })
+            </th>
+            <th class="selectStudent" hidden="hidden"></th>
+        </tr>
+        @foreach (var item in Model.StudentHRs)
+        {
+            <tr id=@item.Id style="height:57px">
+                <td>
+                    @{
+            if (item.Gender == "M")
+            {
+                <img src="~/Images/StudentBoy.jpg" width="31" height="40" />
+            }
+            else
+            {
+                <img src="~/Images/StudentGirl.jpg" width="31" height="40" />
+            }
+                    }
+                </td>
+                <td>
+                    @item.FullName
+                </td>
+
+                <td>
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-hand-left'></span>", "Select student", "", "Students", routeValues: null,
+                                                           htmlAttributes: new { @class = "btn btn-success selectStudent", @data_Id = item.Id })
+                </td>
+
+            </tr>
+        }
+    </table>
+    <div id="dvPager">
+        
+        @Html.PagedListPager((IPagedList)Model.StudentHRs,
+                         page => Url.Action("StudentLoans", new { studentId = Model.StudentId,
+                                                                    classId = Model.ClassId,
+                                                                    search = Model.Search,
+                                                                    sortOrder = Model.SortOrder,
+                                                                    asc = Model.Ascending,
+                                                                    libraryId = Model.LibraryId,
+                                                                    page = page
+                         }), 
+                         PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly,
+                                            new AjaxOptions
+                                            {
+                                                InsertionMode = InsertionMode.Replace,
+                                                HttpMethod = "Get",
+                                                UpdateTargetId = "dvPager"
+                                            }))
+    </div>
+}

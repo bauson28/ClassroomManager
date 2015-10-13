@@ -1,0 +1,42 @@
+﻿@*@model HomeReadingManager.Models.StSession*@
+@model HomeReadingManager.ViewModels.Stocktake
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    @*<head>
+            <meta name="viewport" content="width=device-width" />
+            <title>Select Title</title>
+        </head>*@
+    <body>
+       @using (Html.BeginForm("Index", "Stocktake", FormMethod.Post))
+       {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>Create new counting session</h4>
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NewSession, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NewSession, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NewSession, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create Session" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                @Html.ActionLink("Clear", "Index" )
+            </div>
+        }
+    </body>
+</html>

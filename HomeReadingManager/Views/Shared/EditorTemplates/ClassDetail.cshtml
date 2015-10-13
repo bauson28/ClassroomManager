@@ -1,0 +1,35 @@
+﻿@model HomeReadingManager.ViewModels.ClassDetail
+@{
+    Layout = null;
+}
+
+<tr>
+   <td>
+        @Html.DisplayFor(model => Model.ClassName)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.Stage)
+    </td>
+
+    <td>
+       @Html.DropDownListFor(m => Model.TeacherId, new SelectList(ViewBag.TeachersList, "Id", "Teacher", Model.TeacherId), "Not set", new { @class = "teachers", @data_id = @Model.ClassId })
+    </td>
+
+    <td>
+       @Html.DropDownListFor(m => Model.TeacherId2, new SelectList(ViewBag.TeachersList, "Id", "Teacher", Model.TeacherId2), "Not set", new { @class = "teachers2", @data_id = @Model.ClassId })
+    </td>
+    <td>
+
+    <td>
+       <div class="checkbox chInactive" data-id=@Model.ClassId>
+                @Html.EditorFor(m => Model.Inactive)
+                @Html.ValidationMessageFor(model => Model.Inactive, "", new { @class = "text-danger" })
+            </div>
+    </td>
+</tr>
+
+
+
+
+
+

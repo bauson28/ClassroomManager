@@ -1,0 +1,83 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.StockReportList
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <div class="modal-body">
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("Title", "Index", new { reportType = ViewBag.ReportType, sortOrder = "Title", lastOrder = ViewBag.SortColumn, page = ViewBag.Page })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Isbn)
+                </th>
+                <th>
+                    @Html.ActionLink("Level", "Index", new { reportType = ViewBag.ReportType, sortOrder = "ReadLevel", lastOrder = ViewBag.SortColumn, page = ViewBag.Page })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Stock)
+                </th>
+                @{
+                    if (ViewBag.ReportType != 4)
+                    { 
+                    <th>
+                        @Html.DisplayNameFor(model => model.Count)
+                    </th>
+                    <th>
+                        @Html.ActionLink("Diff", "Index", new { reportType = ViewBag.ReportType, sortOrder = "Diff", lastOrder = ViewBag.SortColumn, page = ViewBag.Page })
+                    </th>
+                    }
+                 }
+            </tr>
+
+            @foreach (var item in ViewBag.ReportList)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Isbn
+                    </td>
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @item.Stock
+                    </td>
+                    @{
+                        if (ViewBag.ReportType != 4)
+                        { 
+                        <td>
+                            @item.Count
+                        </td>
+                        <td>
+                            @item.Diff
+                        </td>
+                    }
+                    }
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)ViewBag.ReportList, page => Url.Action("Index", new { reportType = ViewBag.ReportType, page = page, lastOrder = ViewBag.SortColumn }))
+
+    </div>
+
+</body>
+</html>
+
+
+
+

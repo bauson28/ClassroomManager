@@ -1,0 +1,65 @@
+﻿@model HomeReadingManager.ViewModels.Stocktake
+@{
+    ViewBag.Title = "Counting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Stocktake Counting</h2>
+
+@using (Html.BeginForm("Counting", "Stocktake", FormMethod.Post, new { id = "thisForm" }))
+{
+    @Html.HiddenFor(model => model.SessionName)
+    <div class="row">
+        <div class="col-md-3">
+            <p>
+                <h4>Stocktake commenced:</h4>
+            </p>
+            <p>
+                <h4>@Html.DisplayFor(model => model.LastStocktake)</h4>
+            </p>
+            <p>
+                Counting session:
+            </p>
+            <p>
+                @Html.DropDownList("SessionId", null, htmlAttributes: new { @class = "form-control" })
+            </p>
+            <p>
+                @Html.ActionLink("Start new counting session", "NewSession")
+            </p>
+            <p>
+                <img src="@Url.Content("~/Images/TeacherOwl.jpg")" alt="IMAGES" width="200" height="200" />
+            </p>
+            <p>
+                @Html.ActionLink("Stocktake reports & processing", "ProcessStocktake")
+            </p>
+        </div>
+    
+        <div class="col-md-9" id="reportsDiv">
+                <p>
+                    <h4>@Html.Raw(ViewBag.SessionName)</h4>
+                </p>
+               
+            <div id="dvContainer">
+                
+                @Html.Action("CountingList", "Stocktake", new {page = ViewBag.Page, libraryId = Model.LibraryId});
+                              
+            </div>
+        </div>
+    </div>
+}
+@section Scripts
+{
+    @*@Scripts.Render("~/bundles/myCustomBundle")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $("#SessionId").change(function () {
+                    var temp = $("#SessionId option:selected").text();
+                    $('input[name=SessionName]').val(temp);
+                    $("#thisForm").submit();
+                });
+            });
+        });
+    </script>
+}
+

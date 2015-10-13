@@ -1,0 +1,127 @@
+﻿@model HomeReadingManager.ViewModels.StudentCreate
+
+@{
+    ViewBag.Title = "CreateStudent";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+        <div class="alert alert-warning">
+            <h4>
+                Add new student for class
+                @Html.DisplayFor(m => Model.ClassName)
+            </h4>
+
+
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @*<h4>Add a student</h4>*@
+                <hr />
+                @Html.HiddenFor(m => Model.Ascending)
+                @Html.HiddenFor(m => Model.SortOrder)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 focus">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @maxlength = "20" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="editor-field">
+                            @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>{
+                                    new SelectListItem{ Text="Please select...", Value=""},
+                                    new SelectListItem{ Text="Boy", Value="M"},
+                                    new SelectListItem{ Text="Girl", Value="F"}
+                                    })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LevelId, "Reading level", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+
+                        @Html.DropDownListFor(model => model.LevelId, new SelectList(Model.LevelsList, "Id", "Level"), "Not set")
+                        @Html.ValidationMessageFor(model => model.LevelId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GradeId, "Grade", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+
+                        @Html.DropDownListFor(model => model.GradeId, new SelectList(Model.GradesList, "Id", "Grade"), "Please select...")
+                        @Html.ValidationMessageFor(model => model.GradeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SRN, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SRN, new { htmlAttributes = new { @class = "form-control", @maxlength = "12" } })
+                        @Html.ValidationMessageFor(model => model.SRN, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-1">
+                        <input type="submit" value="Create student" class="btn btn-primary closeModel" id="approve-btn" style="width:120px" />
+                     </div>
+                    <div class="col-md-offset-1 col-md-1">
+                        <button type="button" class="btn btn-warning closeModel" data-dismiss="modal" style="width:120px">
+                            Cancel
+                        </button>
+                    </div>
+                    @*<div class="col-md-offset-1 col-md-5">
+                        <input type="reset" value="Reset" class="form-reset btn btn-info" style="width:120px" />
+                    </div>*@
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+@section Scripts
+{
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @*<script type="text/javascript">
+     $(function () {
+            $('.form-reset').on('click', function () {
+
+               myForm = $('#thisForm');
+               myForm.validate().resetForm();
+               //reset unobtrusive validation summary, if it exists
+               myForm.find("[data-valmsg-summary=true]")
+                   .removeClass("validation-summary-errors")
+                   .addClass("validation-summary-valid")
+                   .find("ul").empty();
+
+               //reset unobtrusive field level, if it exists
+               myForm.find("[data-valmsg-replace]")
+                   .removeClass("field-validation-error")
+                   .addClass("field-validation-valid")
+                   .empty();
+               myForm.removeData('unobtrusiveValidation');
+               //myForm.removeData('validator');
+               //myForm.validator.unobtrusive.parse($('form'));
+               //$('#dvMessages').val('');
+           });
+     })
+    </script>*@
+}

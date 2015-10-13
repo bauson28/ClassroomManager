@@ -1,0 +1,21 @@
+{
+    "environmentSettings": {
+        "webSite": {
+            "name": "HomeReadingManager",
+            "location": "Southeast Asia"
+        },
+        "databases": [
+            {
+                "connectionStringName": "DefaultConnection",
+                "databaseName": "HomeReadingManager_db",
+                "serverName": "iz9xbz5fvf",
+                "user": "mdps4290",
+                "password": "",
+                "edition": "",
+                "size": "",
+                "collation": "",
+                "location": "East Asia"
+            }
+        ]
+    }
+}

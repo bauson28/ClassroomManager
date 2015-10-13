@@ -1,0 +1,161 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.BarcodeLabels
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "BarcodeLabels", FormMethod.Post, new { id = "thisForm" }))
+{
+    
+    <div class="row">
+        <div class="col-md-3">
+           
+            @Html.HiddenFor(model => model.UserSettings_Id)
+            @Html.HiddenFor(model => model.LibraryId)
+            @Html.HiddenFor(model => model.UserId)
+
+            <img style="margin-top: 40px; margin-bottom: 30px" src="@Url.Content("~/Images/BarcodeLabels.jpg")" alt="IMAGES" width="200" height="200" />
+           
+            <h4 style="color:blue">Barcode Label Page Settings</h4>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.LabelsPerCol)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LabelsPerCol)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ColsPerPage)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ColsPerPage)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LabelsTop)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LabelsTop)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LabelsBottom)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LabelsBottom)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.LabelsLeft)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LabelsLeft)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LabelsRight)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LabelsRight)
+                </dd>
+            </dl>
+            Edit page settings @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Edit label sheet size", "Edit", "BarcodeLabels", routeValues: new
+                                                                                 {
+                                                                                     id = Model.UserSettings_Id,
+                                                                                     sortOrder = Model.SortOrder,
+                                                                                     asc = Model.Ascending,
+                                                                                     page = Model.Page,
+                                                                                     userId = Model.UserId
+                                                                                 }, htmlAttributes: new { @class = "btn btn-primary" })
+           
+            <div style ="margin-top: 30px">
+                <h4>
+                    Actions
+                </h4>
+                <p>
+                    @Html.ActionLink("Print labels for the whole list", "PrintLabels", new { sortOrder = Model.SortOrder, asc = Model.Ascending, userId = Model.UserId, libraryId = Model.LibraryId }, new { target = "_blank" })
+                </p>
+                <p>
+                    @Html.ActionLink("Print labels for this page", "PrintLabels", new { page = Model.Page, sortOrder = Model.SortOrder, asc = Model.Ascending, userId = Model.UserId, libraryId = Model.LibraryId }, new { target = "_blank" })
+                </p>
+                <p>
+                    @Html.ActionLink("Delete the list", "DeleteLabels", new { sortOrder = Model.SortOrder, asc = Model.Ascending, userId = Model.UserId, libraryId = Model.LibraryId }, new { target = "_blank" })
+                </p>
+                <p>
+                    @Html.ActionLink("Delete this page from the list", "DeleteLabels", new { page = Model.Page, sortOrder = Model.SortOrder, asc = Model.Ascending, userId = Model.UserId, libraryId = Model.LibraryId }, new { target = "_blank" })
+                </p>
+            </div>
+        </div>
+
+
+        <div class="col-md-9" id="reportsDiv">
+            <h2>Barcode Label Printing</h2>
+            <p>
+                Enter barcode(or ISBN) or enter part of the title to search: @Html.TextBox( "SearchString", "", new { @autofocus = "autofocus", @id = "barcode" })
+                <input type="submit" value="Search" class="btn btn-success" />
+            </p>
+            <div id="dvLabelList">
+                @Html.Action("LabelList", "BarcodeLabels", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page, userId = Model.UserId, libraryId = Model.LibraryId});
+            </div>
+
+            <div id="dvTitleSearch" hidden="hidden">
+                @Html.Action("TitleSearch", "BarcodeLabels", new { search = Model.TitleSearch, page = Model.Page });
+            </div>
+        </div>
+    </div>
+   
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function set(value) {
+                return value;
+            }
+            $('#barcode').val('');
+
+            search = set(@Html.Raw(Json.Encode(Model.TitleSearch)));
+            if (search) {
+                $("#dvTitleSearch").show();
+                $("#dvLabelList").hide();
+            }
+           
+            $(function () {
+                $('#titleSort').on('click', function (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    var sortOrder = 'Title';//$(this).val();
+                    //alert("sortorder " + sortOrder);
+                    var lastOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+                    var asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+                    var page = set(@Html.Raw(Json.Encode(Model.Page)));
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Content("~/BarcodeLabels/LabelList")",
+                        data: {
+                            sortOrder: sortOrder,
+                            asc: asc,
+                            page: page
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            //$('#reportsDiv').html(result);
+                        }
+                    });
+                });
+            });
+        });
+
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,58 @@
+﻿@model HomeReadingManager.ViewModels.AssessmentArea
+
+@{
+    ViewBag.Title = "CreateArea";
+    Layout = "~/Views/Shared/_ModalPopup.cshtml";
+}
+@using (Html.BeginForm("CreateArea", "Subjects", FormMethod.Post, new { id = "thisForm" }))
+{
+    <div class="modal-body">
+        <div class="alert alert-warning">
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.GradeReportId)
+            @Html.HiddenFor(model => model.LibraryId)
+            <div class="form-horizontal">
+                <h4>Create KLA indicator</h4>
+
+                <h2 style="color: navy">@Html.DisplayFor(m => m.Parent)</h2>
+
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.GradeId)
+                @*@Html.HiddenFor(model => model.Grade)*@
+                @Html.HiddenFor(model => model.ParentId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 focus" id="tbName">
+                        @*@Html.TextBoxFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @maxlength = "100" } })*@
+                        @Html.TextAreaFor(model => model.Name, 5, 1, new { @class = "textAreaPopup" })
+                        <p>
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-2">
+                    <input type="submit" value="Create" class="btn btn-primary closeModel btnMedium" />
+                </div>
+                <div class="col-md-6">
+
+                    <button type="button" class="btn btn-warning closeModel btnMedium" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@*@section Scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+
+
+
+

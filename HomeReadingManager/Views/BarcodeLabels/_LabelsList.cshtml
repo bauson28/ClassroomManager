@@ -1,0 +1,69 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.LabelList
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <div class="modal-body">
+       
+        @*<p>
+            Enter barcode(or ISBN) or enter part of the title to search: @Html.TextBox("SearchString", Model.SearchString as string, new { @autofocus = "autofocus" })
+            <input type="submit" value="Search" />
+        </p>*@
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("Title", "Index", new { newOrder = "Title", SortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page })
+                </th>
+                <th>
+                    @Html.ActionLink("Isbn", "Index", new { newOrder = "Isbn", SortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page })
+                </th>
+                <th>
+                    @Html.ActionLink("Read level", "Index", new { newOrder = "ReadLevel", SortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page })
+                </th>
+                <th>
+                    @Html.ActionLink("Default sort", "Index", new { newOrder = "Entered", SortOrder = Model.SortOrder, asc = Model.Ascending, page = Model.Page })
+                </th>
+            </tr>
+
+            @foreach (var item in Model.Labels)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Isbn
+                    </td>
+                    <td>
+                        @item.ReadLevel
+                    </td>
+                    <td>
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete", "Delete", "BarcodeLabels", routeValues: new
+                           {
+                               id = item.Print_Id,
+                               sortOrder = Model.SortOrder,
+                               asc = Model.Ascending,
+                               page = Model.Page
+                           },
+                           htmlAttributes: new { data_modal = "", @class = "btn btn-danger" })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)Model.Labels, page => Url.Action("Index", new { sortOrder = Model.SortOrder, asc = Model.Ascending, page = page }))
+
+    </div>
+
+</body>
+</html>
+

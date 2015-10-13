@@ -1,0 +1,71 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.StudentLoansModel
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    @*<div>  class="modal-body"*@
+      @if (Model.StudentLoansList != null && Model.StudentLoansList.Count() > 0)
+      { 
+            <table class="table">
+                <tr>
+                    <th>
+                        Title@*@Html.DisplayNameFor(model => model.StudentLoansList.FirstOrDefault().Title)*@
+                    </th>
+                    <th>
+                       Reading Level @*@Html.DisplayNameFor(model => model.StudentLoansList.FirstOrDefault().ReadLevel)*@
+                    </th>
+                    <th>
+                       Borrowed on @*@Html.DisplayNameFor(model => model.StudentLoansList.FirstOrDefault().BorrowDate)*@
+                    </th>
+                    <th>
+                        Returned@*@Html.DisplayNameFor(model => model.StudentLoansList.FirstOrDefault().DaysOut)*@
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.StudentLoansList)
+                {
+                    <tr>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                            @item.ReadLevel
+                        </td>
+                        <td>
+                            @item.BorrowDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @item.DaysOut
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.PagedListPager((IPagedList)Model.StudentLoansList, page => Url.Action("Index", new
+                                                                                       {
+                                                                                           reportType = 6,
+                                                                                           page = page,
+                                                                                           studentId = Model.StudentId,
+                                                                                           student = Model.Student,
+                                                                                           libraryId = Model.LibraryId,
+                                                                                           school = Model.School
+                                                                                       }))
+      }
+      else
+      {
+          <h4>@Html.DisplayFor(mbox=>Model.NoLoansMessage)</h4>
+           <img src="@Url.Content("~/Images/TeacherOwl.jpg")" alt="IMAGES" width="200" height="200" />
+      }
+    @*</div>*@
+
+</body>
+</html>

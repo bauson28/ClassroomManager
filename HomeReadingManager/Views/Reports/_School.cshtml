@@ -1,0 +1,124 @@
+﻿@using HomeReadingManager.MyClasses
+@model HomeReadingManager.ViewModels.SchoolLoansModel
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("Class", "Index", new
+                                                           {
+                                                               reportType = 4,
+                                                               newOrder = "ClassName",
+                                                               sortOrder = Model.SortOrder,
+                                                               asc = Model.Ascending,
+                                                               page = Model.Page,
+                                                               libraryId = Model.LibraryId,
+                                                               school = Model.School
+                                                           })
+                </th>
+                <th>
+                    @Html.ActionLink("Teacher", "Index", new
+                                                           {
+                                                               reportType = 4,
+                                                               newOrder = "Teacher",
+                                                               sortOrder = Model.SortOrder,
+                                                               asc = Model.Ascending,
+                                                               page = Model.Page,
+                                                               libraryId = Model.LibraryId,
+                                                               school = Model.School
+                                                           })
+                </th>
+                <th>
+                    @Html.ActionLink("Books", "Index", new
+                                                           {
+                                                               reportType = 4,
+                                                               newOrder = "BooksRead",
+                                                               sortOrder = Model.SortOrder,
+                                                               asc = Model.Ascending,
+                                                               page = Model.Page,
+                                                               libraryId = Model.LibraryId,
+                                                               school = Model.School
+                                                           })
+                </th>
+                <th>
+                    Max level
+                </th>
+                <th>
+                    Min level
+                </th>
+                <th>
+                    @Html.ActionLink("Avg level", "Index", new
+                                                            {
+                                                                reportType = 4,
+                                                                newOrder = "AvgLevel",
+                                                                sortOrder = Model.SortOrder,
+                                                                asc = Model.Ascending,
+                                                                page = Model.Page,
+                                                                libraryId = Model.LibraryId,
+                                                                school = Model.School
+                                                            })
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.SchoolLoansList)
+            {
+                <tr>
+                    
+                    <td>
+                        @item.ClassName
+                    </td>
+                    <td>
+                        @item.Teacher
+                    </td>
+                    <td>
+                        @item.BooksRead
+                    </td>
+                    <td>
+                        @item.MaxLevel
+                    </td>
+                    <td>
+                        @item.MinLevel
+                    </td>
+                    <td>
+                        @item.AvgLevel
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Index", new
+                                                               {
+                                                                   reportType = 5,
+                                                                   classId = item.ClassId,
+                                                                   className = item.ClassName,
+                                                                   libraryId = Model.LibraryId,
+                                                                   school = Model.School
+                                                               })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager((IPagedList)Model.SchoolLoansList, page => Url.Action("Index", new
+                                                                                   {
+                                                                                       reportType = 4,
+                                                                                       page = page,
+                                                                                       sortOrder = Model.SortOrder,
+                                                                                       asc = Model.Ascending,
+                                                                                       libraryId = Model.LibraryId,
+                                                                                       school = Model.School
+                                                                                   }))
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+﻿@model HomeReadingManager.ViewModels.StudentDet
+
+@{
+    ViewBag.Title = "Student Details";
+}
+<script type="text/javascript">
+    function set(value) {
+        return value;
+    }
+
+    $(function () {
+        $('#back').on('click', function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            classId = set(@Html.Raw(Json.Encode(Model.ClassId)));
+            libraryId = set(@Html.Raw(Json.Encode(Model.LibraryId)));
+            sortOrder = set(@Html.Raw(Json.Encode(Model.SortOrder)));
+            asc = set(@Html.Raw(Json.Encode(Model.Ascending)));
+           
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Content("~/Students/OrganiseClass")",
+                data: {
+                    id: parseInt(id),
+                    sortOrder: sortOrder,
+                    asc: asc,
+                    libraryId: libraryId,
+                    classId: classId
+                },
+                dataType: 'html',
+                success: function (result) {
+                    $("#dvMain").hide();
+                    $("#dvActivity").removeClass("col-md-9").addClass("col-md-12")
+                    $("#dvActivity").empty().append(result);
+                    $('#activity').val('Organise');
+                    $("#addIcon").show();
+                }
+            });
+
+        });
+    });
+
+</script>
+
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<div class="centeredHeader">
+    <h2>@Html.DisplayFor(m => m.Student)</h2>
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dd>
+            @Html.DisplayFor(model => model.Student)
+          </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+      
+        <dt>
+            @Html.DisplayNameFor(model => model.SRN)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SRN)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClassName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Grade)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Grade)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReadLevel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReadLevel)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+       
+    </dl>
+
+</div>
+<div>
+   @*@Html.ActionLink("Back to List", "OrganiseClass", new {classId = Model.ClassId, sortOrder = Model.SortOrder, asc = Model.Ascending, libraryId = Model.LibraryId })*@
+    <div class="col-md-offset-1 col-md-8">
+        <button type="button" class="btn" id="back"  style="color:blue">
+            Back to list
+        </button>
+    </div>
+</div>
+
+<dd>
+
+    <table class="table">
+        <tr>
+            <th colspan="3" style="text-align:center; text-decoration-color:azure">
+                <h4>@Html.DisplayNameFor(model => Model.Contacts)</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>Contact</th>
+            <th>Relationship</th>
+            <th>Phone</th>
+        </tr>
+        @foreach (var item in Model.Contacts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <
+                <td>
+                    @Html.DisplayFor(modelItem => item.Relationship)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+            </tr>
+        }
+    </table>
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

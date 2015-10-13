@@ -1,0 +1,23 @@
+﻿@model HomeReadingManager.ViewModels.NoData
+
+@using (Html.BeginForm("MyClass", "Students", FormMethod.Get, new { id = "thisForm" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <br />
+            <br />
+            <h2>@Html.DisplayFor(m => m.Heading)</h2>
+            <h2>@Html.DisplayFor(m => m.Student)</h2>
+
+            <h4>@Html.DisplayFor(m => m.Message)</h4>
+            <div>
+                <img src="~/Images/SchoolHouse2.jpg" width="300" height="300" />
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+}
+
